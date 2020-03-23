@@ -327,6 +327,12 @@ def ReadByFile(directory, rowsToSkipUse, colsToUse):
             data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colsToUse)
             plotTest(data, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
 
+def ReadFile(filename, skipRows, colsToUseIn, rate):
+    with open(filename) as f:
+        iter = (line for line in f if( line % rate == 0))
+        data = np.genfromtxt(iter, rowsToSkip = skipRows, useCols = colsToUse)
+
+
 #Reads in a single column from all files
 def ReadColumn(directory, colToRead):
     dataFiles = files.glob(directory+'*.csv')
