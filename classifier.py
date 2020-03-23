@@ -283,7 +283,7 @@ def plotTest(dataIn, fileNameIn):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0,500)
-    plt.savefig("C:\\Users\\jacob\\Desktop\\MachineLearning\\test\\"+fileNameIn+"Limit500")
+    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\"+fileNameIn+"Limit500")
     #plt.show()
 
     plt.close()
@@ -300,7 +300,7 @@ def plotAxis(xAxis, yAxis, filename):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0,500)
-    plt.savefig("C:\\Users\\jacob\\Desktop\\MachineLearning\\GraphsRawDataLeftRightLimit500\\"+fileNameIn+"Limit500")
+    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\"+fileNameIn+"Limit500")
     #plt.show()
 
     plt.close()
@@ -361,7 +361,7 @@ if __name__ == '__main__':
     # Download the data set from URL
     #print("Downloading data from {}".format(URL))
     #frame = download_data()
-    directory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\rawData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
     #xAxis = ReadColumn(directory, 0)
     #yAxis = LoadDataByColumn(directory, (2, 3, 4, 5, 6, 7, 8, 9, 10), xAxis)
