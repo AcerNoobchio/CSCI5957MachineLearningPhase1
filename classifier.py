@@ -283,7 +283,7 @@ def plotTest(dataIn, fileNameIn):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0,500)
-    plt.savefig("C:\\Users\\jacob\\Desktop\\MachineLearning\\GraphsRawDataLeftRightLimit500\\"+fileNameIn+"Limit500")
+    plt.savefig("C:\\Users\\jacob\\Desktop\\MachineLearning\\test\\"+fileNameIn+"Limit500")
     #plt.show()
 
     plt.close()
@@ -324,7 +324,7 @@ def ReadByFile(directory, rowsToSkipUse, colsToUse):
     dataFiles = files.glob(directory+'*.csv')
     for file in dataFiles:
         if file.find("left") > 0 or file.find("right") > 0:
-            data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = rowsToUse)
+            data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colsToUse)
             plotTest(data, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
 
 #Reads in a single column from all files
@@ -362,9 +362,9 @@ if __name__ == '__main__':
     #print("Downloading data from {}".format(URL))
     #frame = download_data()
     directory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\rawData\\'
-    #ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
-    xAxis = ReadColumn(directory, 0)
-    yAxis = LoadDataByColumn(directory, (2, 3, 4, 5, 6, 7, 8, 9, 10), xAxis)
+    ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    #xAxis = ReadColumn(directory, 0)
+    #yAxis = LoadDataByColumn(directory, (2, 3, 4, 5, 6, 7, 8, 9, 10), xAxis)
 
 
 
