@@ -271,7 +271,7 @@ def plot(results):
     plt.close()
 
 #plots features per file against time
-def plotTest(dataIn, fileNameIn):
+def plotGraph(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory):
 
     fig = plt.figure(figsize=(30, 6))
     #fig.canvas.set_window_title('Reading info from excel file')
@@ -282,11 +282,15 @@ def plotTest(dataIn, fileNameIn):
     plt.ylabel('Feature')
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
-    plt.ylim(0,500)
-    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\"+fileNameIn+"Limit500")
+    plt.ylim(0, maxY)
+    plt.savefig(outputDirectory+fileNameIn+fileAddendum)
     #plt.show()
 
     plt.close()
+
+def plotDirectory(dataIn, maxY, filePaths, plotDescription, outputDirectory):
+    for i in range(0,len(dataIn)):
+        plotGraph(dataIn[i], maxY, extractFileName(filePaths[i]), plotDescription, outputDirectory)
 
 def plotAxis(xAxis, yAxis, filename):
 
@@ -300,7 +304,7 @@ def plotAxis(xAxis, yAxis, filename):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0,500)
-    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\"+fileNameIn+"Limit500")
+    plt.savefig("C:\\Users\\jacob\\Desktop\\MachineLearning\\GraphsRawDataLeftRightLimit500\\"+fileNameIn+"Limit500")
     #plt.show()
 
     plt.close()
@@ -313,43 +317,63 @@ def rExtractSubstring(stringIn, Delimiter):
     newString = stringIn[lastIndex:]
     return newString
 
-def ExtractSubstring(stringIn, Delimiter):
+def extractSubstring(stringIn, Delimiter):
     lastIndex = stringIn.rfind(Delimiter)
     newString = stringIn[:lastIndex]
     return newString
 
+def extractFileName(stringIn):
+    return extractSubstring(rExtractSubstring(stringIn, "\\"), ".")
+
 # =========================  Reading  ============================================
 #Reads in features by file
-def ReadByFile(directory, rowsToSkipUse, colsToUse):
-    dataFiles = files.glob(directory+'*.csv')
-    for file in dataFiles:
-        if file.find("left") > 0 or file.find("right") > 0:
+def ReadByFile(filePaths, rowsToSkipUse, colsToUse):
+    for file in filePaths:
             data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colsToUse)
-            plotTest(data, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
+            plotTest(data, extractFileName(file))
 
-def ReadFile(filename, skipRows, colsToUseIn, rate):
+def ReadByFileRate(filePaths, rowsToSkip, colsToUse, rate):
+    data = []
+    for file in filePaths:
+            data.append(ReadFile(file, rowsToSkip, colsToUse, rate))
+    finalData = np.asarray(data)
+    return data
+
+def ReadFile(filename, skipRows, colsToUse, rate):
+    i = 0
+    data = []
     with open(filename) as f:
-        iter = (line for line in f if( line % rate == 0))
-        data = np.genfromtxt(iter, rowsToSkip = skipRows, useCols = colsToUse)
+        for line in f:
+            if i % rate == 0:
+                data.append(line)
+            i+=1
+        finalData = np.genfromtxt(data, delimiter=",", skip_header=skipRows, usecols = colsToUse)
+        return finalData
 
 
 #Reads in a single column from all files
-def ReadColumn(directory, colToRead):
-    dataFiles = files.glob(directory+'*.csv')
+def ReadColumn(filePaths, colToRead):
     column =[]
-    for file in dataFiles:
-        if file.find("left") > 0 or file.find("right") > 0:
+    for file in filePaths:
             data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colToRead)
             column = np.append(column, data)
     finalColumn = np.asarray(column)
     return finalColumn
 
-#==================================== Read By Column ================================================
-def ReadColumnByFile(directory, colToRead):
+#collects all of the filenames in a given directory
+def ReadFilePaths(directory):
+    fileNames = []
     dataFiles = files.glob(directory+'*.csv')
-    columns = []
     for file in dataFiles:
         if file.find("left") > 0 or file.find("right") > 0:
+            fileNames.append(file)
+    return fileNames
+
+
+#==================================== Read By Column ================================================
+def ReadColumnByFile(filePaths, colToRead):
+    columns = []
+    for file in filePaths:
             data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colToRead)
             columns.append(data)
     finalColumns = np.asarray(columns)
@@ -364,27 +388,13 @@ def LoadDataByColumn(directory, columnsToRead, xAxis):
     return finalData
 
 if __name__ == '__main__':
-    # Download the data set from URL
-    #print("Downloading data from {}".format(URL))
-    #frame = download_data()
-    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+
+    directory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\rawData\\'
+    outputDirectory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\test\\'
+    paths = ReadFilePaths(directory)
+    #ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+    data = ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10), 20)
+    plotDirectory(data, 500, paths, "max500", outputDirectory)
+
     #xAxis = ReadColumn(directory, 0)
     #yAxis = LoadDataByColumn(directory, (2, 3, 4, 5, 6, 7, 8, 9, 10), xAxis)
-
-
-
-    #print(data)
-    # Process data into feature and label arrays
-    #print("Processing {} samples with {} attributes".format(len(frame.index), len(frame.columns)))
-    #X_train, X_test, y_train, y_test = get_features_and_labels(frame)
-
-    # Evaluate multiple classifiers on the data
-    #print("Evaluating classifiers")
-    #results = list(evaluate_classifier(X_train, X_test, y_train, y_test))
-
-    # Display the results
-    #print("Plotting the results")
-    #df = pd.read_excel(r'C:\Users\jacob\Desktop\MachineLearning\ALL_Data\Cycling1\raw\Cycling1RawLeft.csv')
-    #plotTest(df)
-    #plotTest(data)
