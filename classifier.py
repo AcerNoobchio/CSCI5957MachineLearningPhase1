@@ -271,7 +271,7 @@ def plot(results):
     plt.close()
 
 #plots features per file against time
-def plotTest(dataIn, fileNameIn):
+def plotTest(dataIn, sub_dir, fileNameIn):
 
     fig = plt.figure(figsize=(30, 6))
     #fig.canvas.set_window_title('Reading info from excel file')
@@ -283,7 +283,7 @@ def plotTest(dataIn, fileNameIn):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0,500)
-    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\"+fileNameIn+"Limit500")
+    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\"+sub_dir+fileNameIn+"Limit500")
     #plt.show()
 
     plt.close()
@@ -320,12 +320,12 @@ def ExtractSubstring(stringIn, Delimiter):
 
 # =========================  Reading  ============================================
 #Reads in features by file
-def ReadByFile(directory, rowsToSkipUse, colsToUse):
-    dataFiles = files.glob(directory+'*.csv')
+def ReadByFile(directory, sub_dir, rowsToSkipUse, colsToUse):
+    dataFiles = files.glob(directory+sub_dir+'*.csv')
     for file in dataFiles:
         if file.find("left") > 0 or file.find("right") > 0:
             data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colsToUse)
-            plotTest(data, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
+            plotTest(data, sub_dir, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
 
 #Reads in a single column from all files
 def ReadColumn(directory, colToRead):
@@ -358,27 +358,8 @@ def LoadDataByColumn(directory, columnsToRead, xAxis):
     return finalData
 
 if __name__ == '__main__':
-    # Download the data set from URL
-    #print("Downloading data from {}".format(URL))
-    #frame = download_data()
-    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    ReadByFile(directory,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
-    #xAxis = ReadColumn(directory, 0)
-    #yAxis = LoadDataByColumn(directory, (2, 3, 4, 5, 6, 7, 8, 9, 10), xAxis)
-
-
-
-    #print(data)
-    # Process data into feature and label arrays
-    #print("Processing {} samples with {} attributes".format(len(frame.index), len(frame.columns)))
-    #X_train, X_test, y_train, y_test = get_features_and_labels(frame)
-
-    # Evaluate multiple classifiers on the data
-    #print("Evaluating classifiers")
-    #results = list(evaluate_classifier(X_train, X_test, y_train, y_test))
-
-    # Display the results
-    #print("Plotting the results")
-    #df = pd.read_excel(r'C:\Users\jacob\Desktop\MachineLearning\ALL_Data\Cycling1\raw\Cycling1RawLeft.csv')
-    #plotTest(df)
-    #plotTest(data)
+	directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+	#Read in and create plots of raw data for each activity
+	sub_directory = ['Cycling\\', 'Driving\\', 'Running\\', 'Sitting\\', 'StairDown\\', 'Standing\\', 'Walking\\']
+	for sub_dir in sub_directory:
+		ReadByFile(directory,sub_dir,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10))
