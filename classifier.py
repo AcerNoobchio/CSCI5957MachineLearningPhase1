@@ -10,9 +10,32 @@ try:
 except ImportError:
     pass
 
+#saves generated plot in correct output director/sub_directory
+def saveFig(outputDirectory, fileNameIn, fileAddendum):
+    sub_dir = ''
+    #Switch statement to store in proper subdirectory based on fileName
+    if 'Cy' in fileNameIn:
+        sub_dir = "Cycling\\"
+    elif 'Dr' in fileNameIn:
+        sub_dir = "Driving\\"
+    elif 'Ru' in fileNameIn:
+        sub_dir = "Running\\"
+    elif 'Sit' in fileNameIn:
+        sub_dir = "Sitting\\"
+    elif 'St' in fileNameIn:
+        sub_dir = "StairDown\\"
+    elif 'Su' in fileNameIn:
+        sub_dir = "StairUp\\"
+    elif 'Sd' in fileNameIn:
+        sub_dir = "Standing\\"
+    elif 'Wa' in fileNameIn:
+        sub_dir = "Walking\\"
+    
+    plt.savefig(outputDirectory+sub_dir+fileNameIn+fileAddendum)
+
+
 #plots features per file against time
 def plotGraph(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory):
-
     fig = plt.figure(figsize=(30, 6))
     #fig.canvas.set_window_title('Reading info from excel file')
     for i in range(1,dataIn.shape[1]):
@@ -23,7 +46,8 @@ def plotGraph(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory):
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
     plt.ylim(0, maxY)
-    plt.savefig(outputDirectory+fileNameIn+fileAddendum)
+
+    saveFig(outputDirectory, fileNameIn, fileAddendum)
     #plt.show()
 
     plt.close()
@@ -39,7 +63,7 @@ def plotFeature(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory, col):
     plt.ylabel(labels[col])
     plt.legend()
     plt.ylim(0, maxY)
-    plt.savefig(outputDirectory+fileNameIn+fileAddendum)
+    saveFig(outputDirectory, fileNameIn, fileAddendum)
     #plt.show()
 
     plt.close()
@@ -113,9 +137,11 @@ def ReadFile(filename, skipRows, colsToUse, rate):
         return finalData
 
 #collects all of the filenames in a given directory
-def ReadFilePaths(directory):
+def ReadFilePaths(directory, sub_directories):
     fileNames = []
-    dataFiles = files.glob(directory+'*.csv')
+    dataFiles = []
+    for sub_dir in sub_directories:
+        dataFiles.extend(files.glob(directory+sub_dir+'*.csv'))
     for file in dataFiles:
         if file.find("left") > 0 or file.find("right") > 0:
             fileNames.append(file)
@@ -124,12 +150,16 @@ def ReadFilePaths(directory):
 if __name__ == '__main__':
     global labels
     labels = [ "Time (Milliseconds)", "Time" ,"P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
-    directory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\rawData\\'
-    outputDirectory = 'C:\\Users\\jacob\\Desktop\\MachineLearning\\test\\'
-    paths = ReadFilePaths(directory)
-    #data = ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10), 20)
-    #plotDirectory(data, 500, paths, "max500", outputDirectory)
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+   
+    #Read paths of all data files, in all sub_directories 
+    sub_directories = ['Cycling\\', 'Driving\\', 'Running\\', 'Sitting\\', 'StairDown\\', 'StairUp\\', 'Standing\\', 'Walking\\']
+    paths = ReadFilePaths(directory, sub_directories)
+    
+    data = ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10), 20)
+    plotDirectory(data, 500, paths, "max500", outputDirectory)
     col = 2
     data = ReadByFileRate(paths,1,(0, 2), 40)
     data = rescaleSet(data)
-    plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files
+    #plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files
