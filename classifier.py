@@ -14,8 +14,8 @@ except ImportError:
 
 if __name__ == '__main__':
     labels = [ "Time (Milliseconds)", "Time" ,"P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
     #Read paths of all data files, in all sub_directories 
     sub_directories = ['Cycling\\', 'Driving\\', 'Running\\', 'Sitting\\', 'StairDown\\', 'StairUp\\', 'Standing\\', 'Walking\\']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
