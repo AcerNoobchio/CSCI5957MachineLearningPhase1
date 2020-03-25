@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+
 class DataUtil:
     """Holds utility methods that serve to scale data for specific shapes"""
     # ======================  Re-scaling  ==================================
@@ -25,3 +27,12 @@ class DataUtil:
             dataIn[i] = DataUtil.rescaleX(dataIn[i])
         return dataIn
 
+    #Builds a labled pandas dataframe out of multidimesnional numpy array
+    def shoeDataToDataFrame(data):
+        labels = [ "Time (Milliseconds)","P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "acX", "acY", "acZ"]
+        dataFrames = list()
+        for d in data:
+            d = pd.DataFrame(d, columns=labels)
+            dataFrames.append(d)
+
+        return dataFrames

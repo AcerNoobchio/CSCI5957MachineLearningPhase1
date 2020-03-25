@@ -34,7 +34,7 @@
     <Compile Include="GraphUtil.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RescalingUtil.py">
+    <Compile Include="DataUtil.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StringUtil.py">
