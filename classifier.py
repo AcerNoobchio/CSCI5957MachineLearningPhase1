@@ -13,23 +13,26 @@ except ImportError:
     pass
 
 if __name__ == '__main__':
+    # Enviornemnt constants
     directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    #Read paths of all data files, in all sub_directories 
+
+
+    # -- Read paths of all data files, in all sub_directories --
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
     grapher = Graph()
-    data = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 20)
+    data = FileReader.ReadByFile(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
     #grapher.plotDirectory(data, 500, paths, "max500", outputDirectory)
     
-    # Synchronizing data  -- NEED to be split up by type first!
+    # -- Synchronizing data  -- NEED to be split up by type first!
     dataFrames = Data.shoeDataToDataFrame(data['Cycling'])
-    print(dataFrames[0].head())
     #dataFrames = Synchronization.trim_start_end_times(dataFrames)
     #Synchronization.join_event_data(dataFrames)
+    Synchronization.chunkify_data_frame(dataFrames[0])
 
 
-    #Plotting features
+    # -- Plotting features --
     col = 2
     data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)
     #data = Data.rescale2D(data)
