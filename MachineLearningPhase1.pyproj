@@ -22,6 +22,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="classifier.py" />
+    <Compile Include="FeatureUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileReaderUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GraphUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RescalingUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StringUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="environment.yml" />
