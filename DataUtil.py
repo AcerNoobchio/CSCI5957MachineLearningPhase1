@@ -15,13 +15,13 @@ class DataUtil:
         max = dataIn[dataIn.shape[0]-1][0]
         min = dataIn[0][0]
         for i in range(0, len(dataIn)):
-           dataIn[i,0] = RescalingUtil.rescaleElt(dataIn[i][0], min, max)   
+           dataIn[i,0] = DataUtil.rescaleElt(dataIn[i][0], min, max)   
         return dataIn
 
     #Used for rescaling an array of numpy arrays
     @staticmethod
     def rescale2D(dataIn):
         for i in range(0, len(dataIn)):
-            dataIn[i] = RescalingUtil.rescaleX(dataIn[i])
+            dataIn[i] = DataUtil.rescaleX(dataIn[i])
         return dataIn
 
