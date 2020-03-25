@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from StringUtil import StringUtil as String
+
+
 class GraphUtil:
     """Contains utility methods used for plotting graphs"""
     def __init__(self):
@@ -66,7 +69,7 @@ class GraphUtil:
 
     def plotDirectory(self, dataIn, maxY, filePaths, plotDescription, outputDirectory):
         for i in range(0,len(dataIn)):
-            GraphUtil.plotGraph(dataIn[i], maxY, String.extractFileName(filePaths[i]), plotDescription, outputDirectory)
+            GraphUtil.plotGraph(self, dataIn[i], maxY, String.extractFileName(filePaths[i]), plotDescription, outputDirectory)
 
 
 
