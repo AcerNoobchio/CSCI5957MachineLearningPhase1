@@ -11,15 +11,18 @@ class SynchronizationUtil(object):
         #Collect earliest start time and latest end time for the data frames
         for df in data_frames:
             # If the start time is later than current, update earliest_time
-            if df.time_milisec.iloc[0] > earliest_time:
-                earliest_time = df.time_milisec.iloc[0]
+            if df.iloc[0][0] > earliest_time:
+                earliest_time = df.iloc[0][0]
 
             # If the start time is later than current, update earliest_time
-            if df.time_milisec.iloc[0] > earliest_time:
-                earliest_time = df.time_milisec.iloc[-1]
+            if df.iloc[-1][0] < latest_time:
+                latest_time = df.iloc[-1][0]
         
        # Trim starts and ends of dataframes with obtained start/end times
         for df in data_frames:
-            df = df.drop(df[(df.time_milisec < earliest_time) & (df.time_milisec > latest_time)].index)
-            print(df.time_milisec.iloc[0])
-            print(df.time_milisec.iloc[-1])
+            print(earliest_time)
+            print(latest_time)
+            df = df.drop(df[(df.iloc[:,0] < earliest_time) & (df.iloc[:,0] > latest_time)].index)
+            
+            print(df.iloc[0][0])
+            print(df.iloc[-1][0])

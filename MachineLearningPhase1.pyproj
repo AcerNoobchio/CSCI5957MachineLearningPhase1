@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SynchronizationUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="classifier.py" />
     <Compile Include="FeatureUtil.py">
       <SubType>Code</SubType>
