@@ -20,9 +20,6 @@ class SynchronizationUtil(object):
         
        # Trim starts and ends of dataframes with obtained start/end times
         for df in data_frames:
-            print(earliest_time)
-            print(latest_time)
             df = df.drop(df[(df.iloc[:,0] < earliest_time) & (df.iloc[:,0] > latest_time)].index)
-            
-            print(df.iloc[0][0])
-            print(df.iloc[-1][0])
+
+        return data_frames
