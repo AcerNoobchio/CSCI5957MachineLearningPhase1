@@ -41,7 +41,6 @@ class SynchronizationUtil(object):
         end_time = dataFrame.iloc[-1][0]
         # in seconds, rounding up to accompany all data
         time_span = math.ceil((end_time - start_time)/1000 / (miliSecondInterval/1000))
-        print(end_time)
         # Increase end_time by one percent to ensure we get the end of the data
         end_time = end_time + end_time*.01
         # Initialize our last_time and next_time loop variables to create the chunks
@@ -50,8 +49,6 @@ class SynchronizationUtil(object):
         # Steph through each interval, creating the corresponding chunk and appending it to result
         for chunk in range(1,time_span):
             df = dataFrame[(dataFrame.iloc[:,0] >= last_time) & (dataFrame.iloc[:,0] < next_time)]
-            print("-----------------")
-            print(df)
             result.append(df)
             next_time += miliSecondInterval
             last_time += miliSecondInterval
