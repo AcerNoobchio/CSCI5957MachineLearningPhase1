@@ -23,3 +23,10 @@ class SynchronizationUtil(object):
             df = df.drop(df[(df.iloc[:,0] < earliest_time) & (df.iloc[:,0] > latest_time)].index)
 
         return data_frames
+
+    #Takes in a list of dataframes for a single event, combines them and sorts them by timestamp
+    def join_event_data(data_frames):
+        result = pd.concat(data_frames)
+        result = result.sort_values(result.columns[0])
+
+        return result

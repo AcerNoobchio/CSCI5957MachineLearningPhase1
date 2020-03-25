@@ -28,8 +28,8 @@ if __name__ == '__main__':
     for d in data:
         d = pd.DataFrame(d)
         dataFrames.append(d)
-    dataFrames = Synchronization.trim_start_end_times(dataFrames)
-
+    #dataFrames = Synchronization.trim_start_end_times(dataFrames)
+    Synchronization.join_event_data(dataFrames)
 
 
     #Plotting features
