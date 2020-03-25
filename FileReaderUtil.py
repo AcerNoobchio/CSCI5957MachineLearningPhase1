@@ -7,17 +7,19 @@ class FileReader:
 #Reads in features by file - Currently not working - need to refactor to return data instead of graphing it
     @staticmethod
     def ReadByFile(filePaths, rowsToSkip, colsToUse):
-        data = []
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
         for file in filePaths:
-                data.append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
+            for file in filePaths[dir]:
+                data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
         finalData = np.asarray(data)
         return data
 
     @staticmethod
     def ReadByFileRate(filePaths, rowsToSkip, colsToUse, rate):
-        data = []
-        for file in filePaths:
-                data.append(FileReader.ReadFile(file, rowsToSkip, colsToUse, rate))
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        for dir in filePaths:
+            for file in filePaths[dir]:
+                data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, rate))
         finalData = np.asarray(data)
         return data
 
@@ -37,13 +39,15 @@ class FileReader:
     #collects all of the filenames in a given directory
     @staticmethod
     def ReadFilePaths(directory, sub_directories):
-        fileNames = []
-        dataFiles = []
+        fileNames = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
         for sub_dir in sub_directories:
-            dataFiles.extend(files.glob(directory+sub_dir+'*.csv'))
-        for file in dataFiles:
-            if file.find("left") > 0 or file.find("right") > 0:
-                fileNames.append(file)
+            dataFiles[sub_dir].extend(files.glob(directory+sub_dir+'\\*.csv'))
+        for dir in dataFiles:
+            for file in dataFiles[dir]:
+                if file.find("left") > 0 or file.find("right") > 0:
+                    fileNames[dir].append(file)
+
         return fileNames
 
 
