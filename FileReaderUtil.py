@@ -8,7 +8,7 @@ class FileReader:
     @staticmethod
     def ReadByFile(filePaths, rowsToSkip, colsToUse):
         data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
-        for file in filePaths:
+        for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
         finalData = np.asarray(data)
