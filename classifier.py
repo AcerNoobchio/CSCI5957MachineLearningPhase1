@@ -35,7 +35,12 @@ def saveFig(outputDirectory, fileNameIn, fileAddendum):
 
 
 #plots features per file against time
+<<<<<<< HEAD
 def plotGraph(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory):
+=======
+def plotTest(dataIn, sub_dir, fileNameIn):
+
+>>>>>>> f6de5424c8260f99a1b94cc8ca8369f2cae51eef
     fig = plt.figure(figsize=(30, 6))
     #fig.canvas.set_window_title('Reading info from excel file')
     for i in range(1,dataIn.shape[1]):
@@ -45,9 +50,14 @@ def plotGraph(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory):
     plt.ylabel('Feature')
     plt.legend()
     plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
+<<<<<<< HEAD
     plt.ylim(0, maxY)
 
     saveFig(outputDirectory, fileNameIn, fileAddendum)
+=======
+    plt.ylim(0,500)
+    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\"+sub_dir+fileNameIn+"Limit500")
+>>>>>>> f6de5424c8260f99a1b94cc8ca8369f2cae51eef
     #plt.show()
 
     plt.close()
@@ -62,8 +72,14 @@ def plotFeature(dataIn, maxY, fileNameIn, fileAddendum, outputDirectory, col):
     plt.xlabel('Time')
     plt.ylabel(labels[col])
     plt.legend()
+<<<<<<< HEAD
     plt.ylim(0, maxY)
     saveFig(outputDirectory, fileNameIn, fileAddendum)
+=======
+    plt.xlim(dataIn[0,0],dataIn[dataIn.shape[0]-1,0])
+    plt.ylim(0,500)
+    plt.savefig("C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\"+fileNameIn+"Limit500")
+>>>>>>> f6de5424c8260f99a1b94cc8ca8369f2cae51eef
     #plt.show()
 
     plt.close()
@@ -86,8 +102,19 @@ def extractSubstring(stringIn, Delimiter):
     newString = stringIn[:lastIndex]
     return newString
 
+<<<<<<< HEAD
 def extractFileName(stringIn):
     return extractSubstring(rExtractSubstring(stringIn, "\\"), ".")
+=======
+# =========================  Reading  ============================================
+#Reads in features by file
+def ReadByFile(directory, sub_dir, rowsToSkipUse, colsToUse):
+    dataFiles = files.glob(directory+sub_dir+'*.csv')
+    for file in dataFiles:
+        if file.find("left") > 0 or file.find("right") > 0:
+            data = np.loadtxt(file, delimiter=",", skiprows=1, usecols = colsToUse)
+            plotTest(data, sub_dir, ExtractSubstring(rExtractSubstring(file,"\\"),"."))
+>>>>>>> f6de5424c8260f99a1b94cc8ca8369f2cae51eef
 
 # ======================  Re-scaling  ==================================
 
@@ -96,6 +123,7 @@ def rescale(x, min, max):
     range = max - min
     return ((x-min)/range)
 
+<<<<<<< HEAD
 #used for rescaling a single numpy array
 def rescaleX(dataIn):
     max = dataIn[dataIn.shape[0]-1][0]
