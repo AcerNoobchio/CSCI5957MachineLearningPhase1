@@ -22,6 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="classifier.py" />
+    <Compile Include="FeatureUtil.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="FileReaderUtil.py">
       <SubType>Code</SubType>
     </Compile>
