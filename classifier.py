@@ -2,7 +2,7 @@ import pandas as pd
 from pandas import read_table 
 import numpy as np
 import datetime as dt
-from RescalingUtil import RescalingUtil as Rescale
+from DataUtil import DataUtil as Data
 from FileReaderUtil import FileReader
 from GraphUtil import GraphUtil as Graph
 from SynchronizationUtil import SynchronizationUtil as Synchronization
@@ -35,5 +35,5 @@ if __name__ == '__main__':
     #Plotting features
     col = 2
     data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)
-    data = Rescale.rescale2D(data)
+    data = Data.rescale2D(data)
     #grapher.plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files

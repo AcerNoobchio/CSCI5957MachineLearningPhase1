@@ -1,5 +1,5 @@
 import numpy as np
-class RescalingUtil:
+class DataUtil:
     """Holds utility methods that serve to scale data for specific shapes"""
     # ======================  Re-scaling  ==================================
 
