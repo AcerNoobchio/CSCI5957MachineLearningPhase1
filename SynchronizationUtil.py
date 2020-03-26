@@ -19,7 +19,11 @@ class SynchronizationUtil(object):
             if df.iloc[-1][0] < latest_time:
                 latest_time = df.iloc[-1][0]
         
-       # Trim starts and ends of dataframes with obtained start/end times
+        # Shift start and end times by 3 seconds each to trim noise
+        earliest_time += 3000
+        latest_time -= 3000
+
+        # Trim starts and ends of dataframes with obtained start/end times
         for df in data_frames:
             df = df.drop(df[(df.iloc[:,0] < earliest_time) & (df.iloc[:,0] > latest_time)].index)
 
