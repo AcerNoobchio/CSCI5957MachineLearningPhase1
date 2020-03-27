@@ -15,22 +15,17 @@ except ImportError:
 
 if __name__ == '__main__':
     # Enviornemnt constants
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    testData = []
-    testData.append([0.0, 0])
-    testData.append([0.25, 10])
-    testData.append([0.5, 20])
-    testData.append([0.75, 10])
-    testData.append([1.0, 0])
+     # Enviornemnt constants
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
 
-    newData = np.asarray(testData)
     # -- Read paths of all data files, in all sub_directories --
     #sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
     #paths = FileReader.ReadFilePaths(directory, sub_directories)
     #grapher = Graph()
     #data = FileReader.ReadByFile(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
     #grapher.plotDirectory(data, 500, paths, "max500", outputDirectory)
+
     df = pd.DataFrame(
 	[[21, 72, 67],
 	[23, 78, 69],
