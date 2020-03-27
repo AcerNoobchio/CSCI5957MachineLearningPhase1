@@ -15,8 +15,8 @@ except ImportError:
 
 if __name__ == '__main__':
     # Enviornemnt constants
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
     testData = []
     testData.append([0.0, 0])
     testData.append([0.25, 10])
@@ -31,38 +31,47 @@ if __name__ == '__main__':
     #grapher = Graph()
     #data = FileReader.ReadByFile(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
     #grapher.plotDirectory(data, 500, paths, "max500", outputDirectory)
-    
+    df = pd.DataFrame(
+	[[21, 72, 67],
+	[23, 78, 69],
+	[32, 74, 56],
+	[52, 54, 76]],
+	columns=['a', 'b', 'c'])
+    result = Feature.getChunkData(df)
+    print(result)
     # -- Synchronizing data  -- NEED to be split up by type first!
     #dataFrames = Data.shoeDataToDataFrame(data['Cycling'])
     #dataFrames = Synchronization.trim_start_end_times(dataFrames)
-    #Synchronization.join_event_data(dataFrames)
-    #Synchronization.chunkify_data_frame(dataFrames[0])
+    #dataFrames = Synchronization.join_event_data(dataFrames)
+    #example = Synchronization.chunkify_data_frame(dataFrames[0])
+    #print(example)
 
     # -- Testing Feature methods --  
     #   print("Min: "+Feature.findMin(newData))
-    print("Max: ")
-    print(Feature.findMax(newData))
-    print("Min: ")
-    print(Feature.findMin(newData))
-    print("Median: ")
-    print(Feature.findMedian(newData))
-    print("Mode: ")
-    print(Feature.findMode(newData))
-    print("Sum: ")
-    print(Feature.findSum(newData))
-    print("StDev: ")
-    print(Feature.findStdDev(newData))
-    print("Kurtosis: ")
-    print(Feature.findKurtosis(newData))
-    print("Area Under Curve: ")
-    print(Feature.findAreaUnderCurve(newData))
-    print("Avg Slope: ")
-    print(Feature.findAvgSlope(newData))
-    print("Skewness: ")
-    print(Feature.findSkewness(newData))
-    print("Time to peak: ")
-    print(Feature.findTimeToPeak(newData))
-
+    
+    #print("Max: ")
+    #print(Feature.findMax(newData))
+    #print("Min: ")
+    #print(Feature.findMin(newData))
+    #print("Median: ")
+    #print(Feature.findMedian(newData))
+    #print("Mode: ")
+    #print(Feature.findMode(newData))
+    #print("Sum: ")
+    #print(Feature.findSum(newData))
+    #print("StDev: ")
+    #print(Feature.findStdDev(newData))
+    #print("Kurtosis: ")
+    #print(Feature.findKurtosis(newData))
+    #print("Area Under Curve: ")
+    #print(Feature.findAreaUnderCurve(newData))
+    #print("Avg Slope: ")
+    #print(Feature.findAvgSlope(newData))
+    #print("Skewness: ")
+    #print(Feature.findSkewness(newData))
+    #print("Time to peak: ")
+    #print(Feature.findTimeToPeak(newData))
+    
 
     # -- Plotting features --
     #col = 2

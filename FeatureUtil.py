@@ -73,26 +73,99 @@ class FeatureUtil:
         return (stats._sum(slopes)[1]/len(slopes))
 
     #Iterates through the files in the data frame, sending activities to be broken up
+    #dataFrame - List
     @staticmethod
-    def exportFeatureFrame(dataFrame):
-        return dataFrame
+    def exportDataSetFeatures(dataFrames):
+        featureFrame = []
+        for frame in dataFrames:
+            featureFrame.append(FeatureUtil.exportActivityFeatures(frame))
+        return featureFrame
 
     #Iterates through the activities in the data frame, sending the events to be broken up
+    #activities - List
     @staticmethod
-    def exportActivityFeatures(activities):
-        return activities
+    def exportFrameFeatures(activities):
+        activityFrame = []
+        for activity in activities:
+            activityFrame.append(FeatureUtil.exportEventFeatures(activity))
+        return activityFrame
 
     #Iterates through the Events in the data frame, sending the chunks to be broken up
+    #events - List
     @staticmethod
-    def exportEventFeatures(events):
-        return events
+    def exportActivityFeatures(events):
+        eventFrame = []
+        for event in events:
+            eventFrame.append(FeatureUtil.exportChunkFeatures(event))
+        return eventFrame
 
-    #Iterates through the chunks in the data frame, sending the lines to be broken up
+    #Iterates through the chunks in the data frame, sending each chunk to be analyzed
+    #chunks - List of Dataframes
     @staticmethod
-    def exportChunkFeatures(chunks):
-        return chunks
+    def exportEventFeatures(chunks):
+        chunkFrame = []
+        for chunk in chunks:
+            chunkFrame.append(FeatureUtil.getChunkData(chunk))
+        return chunkFrame
 
-    #Calculates the features for a given line of data and returns the corresponding feature values
+    #Iterates through the columns in the data frame in the chunk itself
+    #chunk - Dataframe
     @staticmethod
-    def exportLineFeatures(chunk):
-        return Chunk
+    def getChunkData(chunk):
+        labels = [  "Max", 
+                    "Min" ,
+                    "Median", 
+                    "Mode", 
+                    "Sum", 
+                    "Standard Deviation",
+                    "Kurtosis",
+                    "Skewness",
+                    "Area Under Curve",
+                    "Time To Peak",
+                    "Average Slope"]        #putting this here because I want this class to remain static
+
+        chunkFrame = pd.DataFrame(index = labels)
+        for col in range(1, len(chunk.columns)):
+            featureList = FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col)) #Generate all of the available features
+            chunkFrame.insert(col-1, chunk.columns.values[col], featureList)  #Format the returned list into a data frame of one column and add it to the chunk's frame
+        return chunkFrame
+
+    #Calculates the features for a given column of data - returns in an array
+    #column - A size (n ,2) numpy array
+    @staticmethod
+    def calculateFeatures(column):
+        features = [FeatureUtil.findMax(column),
+            FeatureUtil.findMin(column),
+            FeatureUtil.findMedian(column),
+            FeatureUtil.findMode(column),
+            FeatureUtil.findSum(column),
+            FeatureUtil.findStdDev(column),
+            FeatureUtil.findKurtosis(column),
+            FeatureUtil.findAreaUnderCurve(column),
+            FeatureUtil.findAvgSlope(column),
+            FeatureUtil.findSkewness(column),
+            FeatureUtil.findTimeToPeak(column)]
+
+        return features
+
+    #Formats a passed list as a column - Keeping it for now, although I think it may just be better to use the pd.insert and pass that information - not as cohesive, but more convienient
+    @staticmethod
+    def formatArrayAsFrameCol(featureList, colLabel):
+        colLabels = [colLabel]
+        labels = [  "Max", 
+                    "Min" ,
+                    "Median", 
+                    "Mode", 
+                    "Sum", 
+                    "Standard Deviation",
+                    "Kurtosis",
+                    "Skewness",
+                    "Area Under Curve",
+                    "Time To Peak",
+                    "Average Slope"]        #putting this here because I want this class to remain static
+
+        newList = np.asarray(featureList)   #convert to numpy array so it can be transposed easier, inefficient but we're not mining bitcoin here
+        newList = np.transpose(newList)     #comes in as a row, need to make it a column
+        featureFrame = pd.DataFrame(data=featureList, index = labels, columns = colLabels)
+        return featureFrame
+

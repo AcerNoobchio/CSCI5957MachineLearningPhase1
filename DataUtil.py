@@ -36,3 +36,10 @@ class DataUtil:
             dataFrames.append(d)
 
         return dataFrames
+
+    #Takes a single column of a pandas dataframe and converts it into a size(n, 2) numpy array using col 0 as the X-Axis
+    def dataFrameColToNumpy(pandasFrame, col):
+        newFrame = pd.DataFrame(data = pandasFrame.iloc[:,0])                                  #Generate new frame with time values
+        newFrame.insert(1, pandasFrame.index[col], pandasFrame.iloc[:,col])                    #Create a frame with time vs whatever is in specified column
+        numpyCol = newFrame.to_numpy()
+        return numpyCol
