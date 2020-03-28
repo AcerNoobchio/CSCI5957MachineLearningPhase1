@@ -13,27 +13,32 @@ try:
 except ImportError:
     pass
 
+#Wrapper function that takes directory, subdirectories and rate and builds raw data plots
+    def graphRawData(directory, sub_directories, rate, outputDirectory):
+        paths = FileReader.ReadFilePaths(directory, sub_directories)
+        grapher = Graph()
+        data = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), rate)
+        for activity in data:
+            grapher.plotDirectory(data[activity], 500, paths[activity], "max500", outputDirectory)
+
 if __name__ == '__main__':
     # Enviornemnt constants
      # Enviornemnt constants
-    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
 
-    # -- Read paths of all data files, in all sub_directories --
-    #sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
-    #paths = FileReader.ReadFilePaths(directory, sub_directories)
-    #grapher = Graph()
-    #data = FileReader.ReadByFile(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+    # -- Graph all the raw data --
+    graphRawData(directory, sub_directories, 40, outputDirectory)
+
+    paths = FileReader.ReadFilePaths(directory, sub_directories)
+    grapher = Graph()
+    #data = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 40)
     #grapher.plotDirectory(data, 500, paths, "max500", outputDirectory)
 
-    df = pd.DataFrame(
-	[[21, 72, 67],
-	[23, 78, 69],
-	[32, 74, 56],
-	[52, 54, 76]],
-	columns=['a', 'b', 'c'])
-    result = Feature.getChunkData(df)
-    print(result)
+    
+    #result = Feature.getChunkData(df)
+    #print(result)
     # -- Synchronizing data  -- NEED to be split up by type first!
     #dataFrames = Data.shoeDataToDataFrame(data['Cycling'])
     #dataFrames = Synchronization.trim_start_end_times(dataFrames)
