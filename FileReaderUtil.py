@@ -1,5 +1,7 @@
 import numpy as np
 import glob as files
+import os
+
 class FileReader:
     """description of class"""
 
@@ -11,6 +13,23 @@ class FileReader:
         for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
+        finalData = np.asarray(data)
+        return data
+
+    @staticmethod
+    def ReadByFileEvent(filePaths, rowsToSkip, colsToUse):
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        tempEvent = []
+
+        for dir in filePaths:
+            #Collects data per event, scanning file for name. Up to 4 events per activity
+            for event in range(1,5):   
+                for file in filePaths[dir]:
+                    if str(event) in os.path.split(file)[1]:
+                        tempEvent.append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
+                if len(tempEvent) > 0:
+                    data[dir].append(tempEvent)
+                    tempEvent = []
         finalData = np.asarray(data)
         return data
 
