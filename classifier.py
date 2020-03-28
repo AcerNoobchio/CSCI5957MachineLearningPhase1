@@ -23,7 +23,7 @@ except ImportError:
     #Wrapper function that takes paths of raw data and returns a dictionary of activities containing lists of events containing a list of dataframes
     #each dataframe represents a two second chunk from the event. Trimming and combining also occur in this proccess
     def synchronizeDataFromPaths(paths):
-        activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         activityData = FileReader.ReadByFileEvent(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
         tempEvents = []
     
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
+    sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
 
     # -- Graph all the raw data --

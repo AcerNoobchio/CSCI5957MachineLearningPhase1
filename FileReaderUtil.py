@@ -9,7 +9,7 @@ class FileReader:
 #Reads in features by file - Currently not working - need to refactor to return data instead of graphing it
     @staticmethod
     def ReadByFile(filePaths, rowsToSkip, colsToUse):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
@@ -18,7 +18,7 @@ class FileReader:
 
     @staticmethod
     def ReadByFileEvent(filePaths, rowsToSkip, colsToUse):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         tempEvent = []
 
         for dir in filePaths:
@@ -35,7 +35,7 @@ class FileReader:
 
     @staticmethod
     def ReadByFileRate(filePaths, rowsToSkip, colsToUse, rate):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, rate))
@@ -58,8 +58,8 @@ class FileReader:
     #collects all of the filenames in a given directory
     @staticmethod
     def ReadFilePaths(directory, sub_directories):
-        fileNames = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
-        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        fileNames = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for sub_dir in sub_directories:
             dataFiles[sub_dir].extend(files.glob(directory+sub_dir+'\\*.csv'))
         for dir in dataFiles:
