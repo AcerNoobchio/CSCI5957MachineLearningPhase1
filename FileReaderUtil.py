@@ -58,14 +58,17 @@ class FileReader:
     #collects all of the filenames in a given directory
     @staticmethod
     def ReadFilePaths(directory, sub_directories):
-        fileNames = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 
+                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
         dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for sub_dir in sub_directories:
             dataFiles[sub_dir].extend(files.glob(directory+sub_dir+'\\*.csv'))
         for dir in dataFiles:
             for file in dataFiles[dir]:
                 if file.find("left") > 0 or file.find("right") > 0:
-                    fileNames[dir].append(file)
+                    fileNames[dir]['Shoe'].append(file)
+                elif file.find("Acc") > 0 or file.find("Gyro") > 0:
+                    fileNames[dir]['Phone'].append(file)
 
         return fileNames
 
