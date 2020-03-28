@@ -13,38 +13,41 @@ try:
 except ImportError:
     pass
 
-#Wrapper function that takes directory, subdirectories and rate and builds raw data plots
-    def graphRawData(directory, sub_directories, rate, outputDirectory):
-        paths = FileReader.ReadFilePaths(directory, sub_directories)
+    #Wrapper function that takes file paths, the data read rate and builds raw data plots, saving them in the provided outputDirectory
+    def graphRawData(paths, rate, outputDirectory):
         grapher = Graph()
-        data = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), rate)
-        for activity in data:
-            grapher.plotDirectory(data[activity], 500, paths[activity], "max500", outputDirectory)
+        activityData = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), rate)
+        for activity in activityData:
+            grapher.plotDirectory(activityData[activity], 500, paths[activity], "max500", outputDirectory)
+
+    #Wrapper function that takes paths of raw data and returns a dictionary of activities containing lists of events containing a list of dataframes
+    #each dataframe represents a two second chunk from the event. Trimming and combining also occur in this proccess
+    def synchronizeDataFromPaths(paths):
+        activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        activityData = FileReader.ReadByFileEvent(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+        tempEvents = []
+    
+        for activity in activityData:
+            for event in activityData[activity]:
+                tempEvent = Data.shoeDataToDataFrame(event)
+                tempEvent = Synchronization.trim_start_end_times(tempEvent)
+                tempEvent = Synchronization.join_event_data(tempEvent)
+                activityDFs[activity].append(Synchronization.chunkify_data_frame(tempEvent))
+
+        return activityDFs
 
 if __name__ == '__main__':
-    # Enviornemnt constants
-     # Enviornemnt constants
+    # Set up enviornemnt constants and read in file paths
     directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing', 'Walking']
+    paths = FileReader.ReadFilePaths(directory, sub_directories)
 
     # -- Graph all the raw data --
-    graphRawData(directory, sub_directories, 40, outputDirectory)
+    #graphRawData(paths, 40, outputDirectory)
 
-    paths = FileReader.ReadFilePaths(directory, sub_directories)
-    grapher = Graph()
-    #data = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 40)
-    #grapher.plotDirectory(data, 500, paths, "max500", outputDirectory)
-
-    
-    #result = Feature.getChunkData(df)
-    #print(result)
     # -- Synchronizing data  -- NEED to be split up by type first!
-    #dataFrames = Data.shoeDataToDataFrame(data['Cycling'])
-    #dataFrames = Synchronization.trim_start_end_times(dataFrames)
-    #dataFrames = Synchronization.join_event_data(dataFrames)
-    #example = Synchronization.chunkify_data_frame(dataFrames[0])
-    #print(example)
+    activityDFs = synchronizeDataFromPaths(paths)
 
     # -- Testing Feature methods --  
     #   print("Min: "+Feature.findMin(newData))
