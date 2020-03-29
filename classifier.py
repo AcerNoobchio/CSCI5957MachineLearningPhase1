@@ -45,13 +45,16 @@ except ImportError:
                 
                     allDataDFs[dataType][activity].append(tempEvents)
         
+        chunkedEvents = []
         for dataType in paths:
             for activity in allDataDFs[dataType]:
                 for event in allDataDFs[dataType][activity]:
                     event = Synchronization.trim_start_end_times(event)
                     for index in range(0,len(event)):
                         event[index] = Synchronization.chunkify_data_frame(event[index])
-                    allDataDFs[dataType][activity] = event
+                    chunkedEvents.append(event)
+                allDataDFs[dataType][activity] = chunkedEvents
+                chunkedEvents = []
 
         return allDataDFs
 
