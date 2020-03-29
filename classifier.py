@@ -47,35 +47,19 @@ if __name__ == '__main__':
     #graphRawData(paths, 40, outputDirectory)
 
     # -- Synchronizing data  -- NEED to be split up by type first!
-    activityDFs = synchronizeDataFromPaths(paths)
+    #activityDFs = synchronizeDataFromPaths(paths)
 
     # -- Testing Feature methods --  
     #   print("Min: "+Feature.findMin(newData))
-    
-    #print("Max: ")
-    #print(Feature.findMax(newData))
-    #print("Min: ")
-    #print(Feature.findMin(newData))
-    #print("Median: ")
-    #print(Feature.findMedian(newData))
-    #print("Mode: ")
-    #print(Feature.findMode(newData))
-    #print("Sum: ")
-    #print(Feature.findSum(newData))
-    #print("StDev: ")
-    #print(Feature.findStdDev(newData))
-    #print("Kurtosis: ")
-    #print(Feature.findKurtosis(newData))
-    #print("Area Under Curve: ")
-    #print(Feature.findAreaUnderCurve(newData))
-    #print("Avg Slope: ")
-    #print(Feature.findAvgSlope(newData))
-    #print("Skewness: ")
-    #print(Feature.findSkewness(newData))
-    #print("Time to peak: ")
-    #print(Feature.findTimeToPeak(newData))
-    
-
+   
+    df = pd.DataFrame(
+	[[21.0, 72.0, 67.0],
+	[23.0, 78.0, 69.0],
+	[32.0, 74.0, 56.0],
+	[52.0, 54.0, 76.0]],
+	columns=['a', 'b', 'c'])
+    result = Feature.getChunkData(df)
+    print(result)
     # -- Plotting features --
     #col = 2
     #data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)

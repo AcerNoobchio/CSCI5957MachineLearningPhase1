@@ -22,7 +22,7 @@ class FeatureUtil:
 
     @staticmethod
     def findMode(data):
-        return (stats._sum(data[:,1])[1]/data.shape[0])
+        return (float)(stats._sum(data[:,1])[1]/data.shape[0])
 
     @staticmethod
     def findSum(data):
@@ -46,15 +46,34 @@ class FeatureUtil:
         return deriv.trapz(newData[:,1], newData[:,0])  #Take the area under the curve using the x axis as sample points (using 1d array assumes taking area between curve and axis)
 
     @staticmethod
-    def findTimeToPeak(data):                           
+    def findPeakInfo(data):                           
         time = 0.0
         times = []
+        min = 999999999.9
+        max = 0.0
+        average = 0.0
         newData = Rescale.rescaleX(data)                #When we subtract, we want a standard unit of time
-        peaks = sig.find_peaks(newData[:,1])[0]                 #grab the indices of the peaks, which are located at index 0
-        for i in range (0, len(peaks)):                      #The indices are in the array contained in element 
-            time = newData[peaks[i]][0] - time               #Add the differences in time for each peak
-            times.append(time)
-        return (stats._sum(times)[1]/len(times))              #Return the average time (in normalized x-axis units)
+        peaks = sig.find_peaks(newData[:,1])[0]              #grab the indices of the peaks, which are located at index 0
+        if  len(peaks) > 0:
+            for i in range (0, len(peaks)):                      #The indices are in the array contained in element 
+                time = newData[peaks[i]][0] - time               #Add the differences in time for each peak
+                times.append(time)
+                peakHeight = newData[peaks[i]][1]
+                if(peakHeight > max):                            #Designwise - should be in their own methods, but I really don't want to write this loop 4 times
+                      max = peakHeight
+                if(peakHeight < min):
+                      min = peakHeight
+                average += peakHeight
+            timeToPeak = (float)(stats._sum(times)[1]/len(times)) 
+            average /= len(peaks)
+        else:
+            min = 0
+            max = 0.0
+            timeToPeak = 0
+
+        peakFeatures = {"ttp":timeToPeak, "min":min,  "max":max, "avg":average}
+
+        return peakFeatures              #Return the average time (in normalized x-axis units)
 
     @staticmethod
     def findAvgSlope(data):
@@ -70,7 +89,7 @@ class FeatureUtil:
             slopes.append(abs((y2 - y1)/(x2 - x1)))     #Abs so the value doesn't even out - might change later
             y1 = y2
             x1 = x2
-        return (stats._sum(slopes)[1]/len(slopes))
+        return (float)(stats._sum(slopes)[1]/len(slopes))
 
     #Iterates through the files in the data frame, sending activities to be broken up
     #dataFrame - List
@@ -112,17 +131,20 @@ class FeatureUtil:
     #chunk - Dataframe
     @staticmethod
     def getChunkData(chunk):
-        labels = [  "Max", 
-                    "Min" ,
-                    "Median", 
-                    "Mode", 
-                    "Sum", 
-                    "Standard Deviation",
-                    "Kurtosis",
-                    "Skewness",
-                    "Area Under Curve",
-                    "Time To Peak",
-                    "Average Slope"]        #putting this here because I want this class to remain static
+        labels = [  "Max:", 
+                    "Min:" ,
+                    "Median:", 
+                    "Mode:", 
+                    "Sum:", 
+                    "Standard Deviation:",
+                    "Kurtosis:",
+                    "Area Under Curve:",
+                    "Average Slope:",
+                    "Skewness:",
+                    "Time To Peak:",
+                    "Min Peak:",
+                    "Max Peak:",
+                    "Avg Peak:"]        #putting this here because I want this class to remain static
 
         chunkFrame = pd.DataFrame(index = labels)
         for col in range(1, len(chunk.columns)):
@@ -134,6 +156,7 @@ class FeatureUtil:
     #column - A size (n ,2) numpy array
     @staticmethod
     def calculateFeatures(column):
+        peakStats = FeatureUtil.findPeakInfo(column)
         features = [FeatureUtil.findMax(column),
             FeatureUtil.findMin(column),
             FeatureUtil.findMedian(column),
@@ -144,7 +167,10 @@ class FeatureUtil:
             FeatureUtil.findAreaUnderCurve(column),
             FeatureUtil.findAvgSlope(column),
             FeatureUtil.findSkewness(column),
-            FeatureUtil.findTimeToPeak(column)]
+            peakStats["ttp"],
+            peakStats["min"],
+            peakStats["max"],
+            peakStats["avg"]]
 
         return features
 
