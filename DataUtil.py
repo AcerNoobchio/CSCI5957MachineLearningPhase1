@@ -37,6 +37,16 @@ class DataUtil:
 
         return dataFrames
 
+    #Builds a labled pandas dataframe out of multidimesnional numpy array
+    def phoneDataToDataFrame(data):
+        labels = [ "Time (Milliseconds)","ax", "ay", "az", "gx", "gy", "gz"]
+        dataFrames = list()
+        for d in data:
+            d = pd.DataFrame(d, columns=labels)
+            dataFrames.append(d)
+
+        return dataFrames
+
     #Takes a single column of a pandas dataframe and converts it into a size(n, 2) numpy array using col 0 as the X-Axis
     def dataFrameColToNumpy(pandasFrame, col):
         newFrame = pd.DataFrame(data = pandasFrame.iloc[:,0])                                  #Generate new frame with time values

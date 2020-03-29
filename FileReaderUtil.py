@@ -66,9 +66,9 @@ class FileReader:
         for dir in dataFiles:
             for file in dataFiles[dir]:
                 if file.find("left") > 0 or file.find("right") > 0:
-                    fileNames[dir]['Shoe'].append(file)
+                    fileNames['Shoe'][dir].append(file)
                 elif file.find("Acc") > 0 or file.find("Gyro") > 0:
-                    fileNames[dir]['Phone'].append(file)
+                    fileNames['Phone'][dir].append(file)
 
         return fileNames
 
