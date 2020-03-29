@@ -15,26 +15,42 @@ except ImportError:
 
     #Wrapper function that takes file paths, the data read rate and builds raw data plots, saving them in the provided outputDirectory
     def graphRawData(paths, rate, outputDirectory):
+        colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8, 10, 12, 14)}
         grapher = Graph()
-        activityData = FileReader.ReadByFileRate(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), rate)
-        for activity in activityData:
-            grapher.plotDirectory(activityData[activity], 500, paths[activity], "max500", outputDirectory)
+
+        for dataType in paths:
+            activityData = FileReader.ReadByFileRate(paths[dataType],1,colsPerDataType[dataType],rate)
+            for activity in activityData:
+                grapher.plotDirectory(activityData[activity], 500, paths[dataType][activity], "max500", outputDirectory)
 
     #Wrapper function that takes paths of raw data and returns a dictionary of activities containing lists of events containing a list of dataframes
     #each dataframe represents a two second chunk from the event. Trimming and combining also occur in this proccess
     def synchronizeDataFromPaths(paths):
+        allDataDFs = {'Shoe': {}, 'Phone': {}}
         activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
-        activityData = FileReader.ReadByFileEvent(paths,1,(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
-        tempEvents = []
-    
-        for activity in activityData:
-            for event in activityData[activity]:
-                tempEvent = Data.shoeDataToDataFrame(event)
-                tempEvent = Synchronization.trim_start_end_times(tempEvent)
-                tempEvent = Synchronization.join_event_data(tempEvent)
-                activityDFs[activity].append(Synchronization.chunkify_data_frame(tempEvent))
+        colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8, 10, 12, 14)}
 
-        return activityDFs
+        for dataType in paths:
+            activityData = FileReader.ReadByFileEvent(paths[dataType],1,colsPerDataType[dataType])
+            tempEvents = []
+    
+            for activity in activityData:
+                for event in activityData[activity]:
+                    if dataType == 'Shoe':
+                        tempEvents = Data.shoeDataToDataFrame(event)
+                    elif dataType == 'Phone':
+                        tempEvents = Data.phoneDataToDataFrame(event)
+                    else:
+                        print('Invalid dataType')
+                
+                    tempEvents = Synchronization.trim_start_end_times(tempEvents)
+                    for tempEvent in range(0,len(tempEvents)):
+                        tempEvents[tempEvent] = Synchronization.chunkify_data_frame(tempEvents[tempEvent])
+
+                    activityDFs[activity].append(tempEvents)
+            allDataDFs[dataType] = activityDFs
+
+        return allDataDFs
 
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
@@ -42,13 +58,12 @@ if __name__ == '__main__':
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
-
     # -- Graph all the raw data --
     #graphRawData(paths, 40, outputDirectory)
 
     # -- Synchronizing data  -- NEED to be split up by type first!
-    activityDFs = synchronizeDataFromPaths(paths)
-
+    allDataDFs = synchronizeDataFromPaths(paths)
+    print("wazzzzup")
     # -- Testing Feature methods --  
     #   print("Min: "+Feature.findMin(newData))
     
