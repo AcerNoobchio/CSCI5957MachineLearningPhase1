@@ -26,7 +26,7 @@ class FeatureUtil:
 
     @staticmethod
     def findSum(data):
-        return stats._sum(data[:,1])[1]
+        return (float)(stats._sum(data[:,1])[1])
 
     @staticmethod
     def findStdDev(data):
@@ -86,46 +86,69 @@ class FeatureUtil:
         for i in range(1, newData.shape[0]):
             x2 = newData[i,0]
             y2 = newData[i,1]
-            slopes.append(abs((y2 - y1)/(x2 - x1)))     #Abs so the value doesn't even out - might change later
+            if not((x2 - x1) == 0):
+                slopes.append(abs((y2 - y1)/(x2 - x1)))     #Abs so the value doesn't even out - might change later, if there is a zero in denom - invalid - don't add
             y1 = y2
             x1 = x2
         return (float)(stats._sum(slopes)[1]/len(slopes))
 
     #Iterates through the files in the data frame, sending activities to be broken up
-    #dataFrame - List
+    #dataFrame - Dictionary
     @staticmethod
-    def exportDataSetFeatures(dataFrames):
+    def exportDataSetFeatures(dataFrames, directory):
         featureFrame = []
-        for frame in dataFrames:
-            featureFrame.append(FeatureUtil.exportActivityFeatures(frame))
+        for key, value in dataFrames.items():
+            directoryToSend = directory+key+"\\"
+            featureFrame.append(FeatureUtil.exportActivityFeatures(value, directoryToSend))
         return featureFrame
-
-    #Iterates through the activities in the data frame, sending the events to be broken up
-    #activities - List
-    @staticmethod
-    def exportFrameFeatures(activities):
-        activityFrame = []
-        for activity in activities:
-            activityFrame.append(FeatureUtil.exportEventFeatures(activity))
-        return activityFrame
 
     #Iterates through the Events in the data frame, sending the chunks to be broken up
     #events - List
     @staticmethod
-    def exportActivityFeatures(events):
+    def exportActivityFeatures(events, directory):
         eventFrame = []
-        for event in events:
-            eventFrame.append(FeatureUtil.exportChunkFeatures(event))
+        for key, value in events.items():
+            directoryToSend = directory+key+"\\"
+            eventFrame.append(FeatureUtil.exportShoeFeatures(value, directoryToSend))
         return eventFrame
 
-    #Iterates through the chunks in the data frame, sending each chunk to be analyzed
-    #chunks - List of Dataframes
+    #Iterates through the Events in the data frame, sending the chunks to be broken up
+    #event - List
     @staticmethod
-    def exportEventFeatures(chunks):
+    def exportShoeFeatures(Event, directory):
+        shoeFrame = []
+        for shoe in Event:
+            if "Shoe" in directory:
+                if shoe == 0:
+                    directoryToSend = directory+"Left"
+                else:
+                    directoryToSend = directory+"Right"
+              
+            else:
+                if shoe == 0:
+                    directoryToSend = directory+"Acc"
+                else:
+                    directoryToSend = directory+"Gyro"
+            shoeFrame.append(FeatureUtil.exportEventFeatures(shoe, directoryToSend))
+        return shoeFrame
+
+    #Iterates through the chunks in the data frame, sending each chunk to be analyzed
+    #chunks - List
+    @staticmethod
+    def exportEventFeatures(chunks, directory):
         chunkFrame = []
         for chunk in chunks:
-            chunkFrame.append(FeatureUtil.getChunkData(chunk))
+            chunkFrame.append(FeatureUtil.exportChunkFeatures(chunk))
         return chunkFrame
+
+    #Iterates through the chunks in the data frame, sending each chunk to be analyzed
+    #chunk - List of Dataframes
+    @staticmethod
+    def exportChunkFeatures(chunk):
+        dataFrames = []
+        for frame in chunk:
+            dataFrames.append(FeatureUtil.getChunkData(frame))
+        return dataFrames
 
     #Iterates through the columns in the data frame in the chunk itself
     #chunk - Dataframe
@@ -148,8 +171,10 @@ class FeatureUtil:
 
         chunkFrame = pd.DataFrame(index = labels)
         for col in range(1, len(chunk.columns)):
-            featureList = FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col)) #Generate all of the available features
-            chunkFrame.insert(col-1, chunk.columns.values[col], featureList)  #Format the returned list into a data frame of one column and add it to the chunk's frame
+            currentColumns = chunk.columns
+            if (chunk.iloc[:,col].value_counts().any() > 0):
+                featureList = FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col)) #Generate all of the available features
+                chunkFrame.insert(col-1, currentColumns.values[col], featureList)  #Format the returned list into a data frame of one column and add it to the chunk's frame
         return chunkFrame
 
     #Calculates the features for a given column of data - returns in an array
