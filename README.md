@@ -3,7 +3,7 @@
 TO DO:
 
 1) Make READme
-2) Import other files
+2) ~~Import other files~~
 3) ~~Cut noise at front/end of events~~
 4) Connect synchro to feature generation
 5) Finishing plotting features
