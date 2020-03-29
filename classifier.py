@@ -26,7 +26,7 @@ except ImportError:
     #Wrapper function that takes paths of raw data and returns a dictionary of activities containing lists of events containing a list of dataframes
     #each dataframe represents a two second chunk from the event. Trimming and combining also occur in this proccess
     def synchronizeDataFromPaths(paths):
-        allDataDFs = {'Shoe': {}, 'Phone': {}}
+        allDataDFs = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
         activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8, 10, 12, 14)}
 
@@ -43,12 +43,15 @@ except ImportError:
                     else:
                         print('Invalid dataType')
                 
-                    tempEvents = Synchronization.trim_start_end_times(tempEvents)
-                    for tempEvent in range(0,len(tempEvents)):
-                        tempEvents[tempEvent] = Synchronization.chunkify_data_frame(tempEvents[tempEvent])
-
-                    activityDFs[activity].append(tempEvents)
-            allDataDFs[dataType] = activityDFs
+                    allDataDFs[dataType][activity].append(tempEvents)
+        
+        for dataType in paths:
+            for activity in allDataDFs[dataType]:
+                for event in allDataDFs[dataType][activity]:
+                    event = Synchronization.trim_start_end_times(event)
+                    for index in range(0,len(event)):
+                        event[index] = Synchronization.chunkify_data_frame(event[index])
+                    allDataDFs[dataType][activity] = event
 
         return allDataDFs
 
