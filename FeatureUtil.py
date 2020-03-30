@@ -117,18 +117,20 @@ class FeatureUtil:
     @staticmethod
     def exportShoeFeatures(Event, directory):
         shoeFrame = []
+        i = 0
         for shoe in Event:
             if "Shoe" in directory:
-                if shoe == 0:
+                if i == 0:
                     directoryToSend = directory+"Left"
                 else:
                     directoryToSend = directory+"Right"
               
             else:
-                if shoe == 0:
+                if i == 0:
                     directoryToSend = directory+"Acc"
                 else:
                     directoryToSend = directory+"Gyro"
+            i += 1
             directoryToSend +="\\"
             shoeFrame.append(FeatureUtil.exportEventFeatures(shoe, directoryToSend))
         return shoeFrame
