@@ -99,40 +99,55 @@ class FeatureUtil:
         featureFrame = []
         for key, value in dataFrames.items():
             directoryToSend = directory+key+"\\"
-            featureFrame.append(FeatureUtil.exportActivityFeatures(value, directoryToSend))
+            featureFrame.append(FeatureUtil.exportFrameFeatures(value, directoryToSend))
         return featureFrame
 
     #Iterates through the Events in the data frame, sending the chunks to be broken up
     #events - List
     @staticmethod
-    def exportActivityFeatures(events, directory):
-        eventFrame = []
-        for key, value in events.items():
+    def exportFrameFeatures(activities, directory):
+        activityFrame = []
+        for key, value in activities.items():
+            if "Driving" in key:
+                print("Yo")
             directoryToSend = directory+key+"\\"
-            eventFrame.append(FeatureUtil.exportShoeFeatures(value, directoryToSend))
+            activityFrame.append(FeatureUtil.exportActivityFeatures(value, directoryToSend))
+        return activityFrame
+    
+    @staticmethod
+    def exportActivityFeatures(Events, directory):
+        eventFrame = []
+        i = 0
+        for event in Events:
+            directoryToSend = directory
+            eventFrame.append(FeatureUtil.exportShoeFeatures(event, directoryToSend, i))
+            i+=1
         return eventFrame
-
     #Iterates through the Events in the data frame, sending the chunks to be broken up
     #event - List
     @staticmethod
-    def exportShoeFeatures(Event, directory):
+    def exportShoeFeatures(Event, directory, eventNum):
         shoeFrame = []
         i = 0
         for shoe in Event:
             if "Shoe" in directory:
                 if i == 0:
-                    directoryToSend = directory+"Left"
+                    directoryToSave = directory+"Left"
                 else:
-                    directoryToSend = directory+"Right"
+                    directoryToSave = directory+"Right"
               
             else:
                 if i == 0:
-                    directoryToSend = directory+"Acc"
+                    directoryToSave = directory+"Gyro"
                 else:
-                    directoryToSend = directory+"Gyro"
+                    directoryToSave = directory+"Acc"
             i += 1
-            directoryToSend +="\\"
-            shoeFrame.append(FeatureUtil.exportEventFeatures(shoe, directoryToSend))
+            directoryToSave +="\\"
+            #shoeFrame.append(FeatureUtil.exportEventFeatures(shoe, directoryToSend))
+            filePath = directoryToSave+"Event"+str(eventNum)+".csv"
+            newEventFeatures = FeatureUtil.exportChunkFeatures(shoe)
+            shoeFrame.append(newEventFeatures)
+            newEventFeatures.to_csv(filePath)      #Export the csv
         return shoeFrame
 
     #Iterates through the chunks in the data frame, sending each chunk to be analyzed
