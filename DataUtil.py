@@ -39,11 +39,14 @@ class DataUtil:
 
     #Builds a labled pandas dataframe out of multidimesnional numpy array
     def phoneDataToDataFrame(data):
-        labels = [ "Time (Milliseconds)","ax", "ay", "az", "gx", "gy", "gz"]
+        accLabels = [ "Time (Milliseconds)","ax", "ay", "az"]
+        gyroLabels = [ "Time (Milliseconds)","gx", "gy", "gz"]
         dataFrames = list()
-        for d in data:
-            d = pd.DataFrame(d, columns=labels)
-            dataFrames.append(d)
+
+        data[0] = pd.DataFrame(data[0], columns=accLabels)
+        dataFrames.append(data[0])
+        data[1] = pd.DataFrame(data[1], columns=gyroLabels)
+        dataFrames.append(data[1])
 
         return dataFrames
 

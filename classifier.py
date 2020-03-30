@@ -15,7 +15,7 @@ except ImportError:
 
     #Wrapper function that takes file paths, the data read rate and builds raw data plots, saving them in the provided outputDirectory
 def graphRawData(paths, rate, outputDirectory):
-    colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8, 10, 12, 14)}
+    colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8)}
     grapher = Graph()
 
     for dataType in paths:
@@ -28,7 +28,7 @@ def graphRawData(paths, rate, outputDirectory):
 def synchronizeDataFromPaths(paths):
     allDataDFs = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
     activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
-    colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8, 10, 12, 14)}
+    colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8)}
 
     for dataType in paths:
         activityData = FileReader.ReadByFileEvent(paths[dataType],1,colsPerDataType[dataType])
@@ -60,18 +60,23 @@ def synchronizeDataFromPaths(paths):
 
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
+    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
+    
     # -- Graph all the raw data --
     #graphRawData(paths, 40, outputDirectory)
 
     # -- Synchronizing data  -- NEED to be split up by type first!
     allDataDFs = synchronizeDataFromPaths(paths)
+    currDF = {'Phone': [], 'Shoe': []}
+    #currDF['Phone'].append(allDataDFs['Phone']['Cycling'])
+    #currDF['Shoe'].append(allDataDFs['Shoe']['Cycling'])
     print("wazzzzup")
     features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
     print("myyy duuuuuudeeeee")
