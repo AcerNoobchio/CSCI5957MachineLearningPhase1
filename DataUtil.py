@@ -53,3 +53,15 @@ class DataUtil:
         newFrame.insert(1, pandasFrame.columns[col], pandasFrame.iloc[:,col])                    #Create a frame with time vs whatever is in specified column
         numpyCol = newFrame.to_numpy()
         return numpyCol
+
+    #Takes a chunk and a list and creates a pairing of each label to each column of the chunk
+    #dataframe - pandas dataframe
+    #Labels - list of strings
+    @staticmethod
+    def generateColPairings(dataframe, labels):
+        newLabels = []
+        for col in dataframe.columns.values:
+            if not("Milliseconds" in col):
+                for i in range(0, len(labels)):
+                    newLabels.append(col +" "+ labels[i])
+        return newLabels

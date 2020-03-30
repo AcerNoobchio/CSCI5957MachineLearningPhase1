@@ -129,6 +129,7 @@ class FeatureUtil:
                     directoryToSend = directory+"Acc"
                 else:
                     directoryToSend = directory+"Gyro"
+            directoryToSend +="\\"
             shoeFrame.append(FeatureUtil.exportEventFeatures(shoe, directoryToSend))
         return shoeFrame
 
@@ -137,23 +138,29 @@ class FeatureUtil:
     @staticmethod
     def exportEventFeatures(chunks, directory):
         chunkFrame = []
+        i = 0
         for chunk in chunks:
-            chunkFrame.append(FeatureUtil.exportChunkFeatures(chunk))
+            filePath = directory+"Event"+str(i)+".csv"
+            newEventFeatures = FeatureUtil.exportChunkFeatures(chunk)
+            chunkFrame.append(newEventFeatures)
+            newEventFeatures.to_csv(filePath)      #Export the csv
+            i+=1
+
         return chunkFrame
 
     #Iterates through the chunks in the data frame, sending each chunk to be analyzed
     #chunk - List of Dataframes
     @staticmethod
     def exportChunkFeatures(chunk):
-        dataFrames = []
+        dataFrames = pd.DataFrame()
         for frame in chunk:
-            dataFrames.append(FeatureUtil.getChunkData(frame))
+            dataFrames = dataFrames.append(FeatureUtil.getChunkDataAsRow(frame), ignore_index = True)
         return dataFrames
 
-    #Iterates through the columns in the data frame in the chunk itself
+    #Iterates through the columns in the data frame in the chunk itself, returns a single row with all of the values of all of the features
     #chunk - Dataframe
     @staticmethod
-    def getChunkData(chunk):
+    def getChunkDataAsRow(chunk):
         labels = [  "Max:", 
                     "Min:" ,
                     "Median:", 
@@ -168,12 +175,43 @@ class FeatureUtil:
                     "Min Peak:",
                     "Max Peak:",
                     "Avg Peak:"]        #putting this here because I want this class to remain static
-
-        chunkFrame = pd.DataFrame(index = labels)
+        featureList = []
+        newLabels = Rescale.generateColPairings(chunk, labels)
+        chunkFrame = pd.DataFrame()
         for col in range(1, len(chunk.columns)):
             currentColumns = chunk.columns
             if (chunk.iloc[:,col].value_counts().any() > 0):
-                featureList = FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col)) #Generate all of the available features
+                featureList.extend(FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col))) #Generate all of the available features
+            else:
+                featureList.extend([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])             #Please clean the empty columns so I don't have to do this :(
+        featureSeries = pd.Series(featureList, index = newLabels)
+        chunkFrame = chunkFrame.append(featureSeries, ignore_index=True)
+        return chunkFrame
+
+    #Iterates through the columns in the data frame in the chunk itself, returns a standard dataframe
+    #chunk - Dataframe
+    @staticmethod
+    def getChunkDataAsFrame(chunk):
+        labels = [  "Max:", 
+                    "Min:" ,
+                    "Median:", 
+                    "Mode:", 
+                    "Sum:", 
+                    "Standard Deviation:",
+                    "Kurtosis:",
+                    "Area Under Curve:",
+                    "Average Slope:",
+                    "Skewness:",
+                    "Time To Peak:",
+                    "Min Peak:",
+                    "Max Peak:",
+                    "Avg Peak:"]        #putting this here because I want this class to remain static
+        featureList = []
+        chunkFrame = pd.DataFrame(index = newLabels)
+        for col in range(1, len(chunk.columns)):
+            currentColumns = chunk.columns
+            if (chunk.iloc[:,col].value_counts().any() > 0):
+                featureList.extend(FeatureUtil.calculateFeatures(Rescale.dataFrameColToNumpy(chunk,col))) #Generate all of the available features
                 chunkFrame.insert(col-1, currentColumns.values[col], featureList)  #Format the returned list into a data frame of one column and add it to the chunk's frame
         return chunkFrame
 
