@@ -60,6 +60,7 @@ def synchronizeDataFromPaths(paths):
 
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
+    print("Setting up enviornment and collecting paths to raw data files\n")
     directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
     outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
     featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
@@ -70,45 +71,27 @@ if __name__ == '__main__':
     paths = FileReader.ReadFilePaths(directory, sub_directories)
     
     # -- Graph all the raw data --
+    print("Graphing all the raw data\n")
     #graphRawData(paths, 40, outputDirectory)
+    print("Finished graphing raw data\n")
 
-    # -- Synchronizing data  -- NEED to be split up by type first!
+    # -- Synchronizing data
+    print("Synchronizing and cleaning raw data... This could take a sec\n")
     allDataDFs = synchronizeDataFromPaths(paths)
-    currDF = {'Phone': [], 'Shoe': []}
-    #currDF['Phone'].append(allDataDFs['Phone']['Cycling'])
-    #currDF['Shoe'].append(allDataDFs['Shoe']['Cycling'])
-    print("wazzzzup")
-    features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
-    print("myyy duuuuuudeeeee")
+    print("Finished synchronizing/cleaning raw data\n")
+    
     # -- Testing Feature methods --  
-    #   print("Min: "+Feature.findMin(newData))
-    
-    #print("Max: ")
-    #print(Feature.findMax(newData))
-    #print("Min: ")
-    #print(Feature.findMin(newData))
-    #print("Median: ")
-    #print(Feature.findMedian(newData))
-    #print("Mode: ")
-    #print(Feature.findMode(newData))
-    #print("Sum: ")
-    #print(Feature.findSum(newData))
-    #print("StDev: ")
-    #print(Feature.findStdDev(newData))
-    #print("Kurtosis: ")
-    #print(Feature.findKurtosis(newData))
-    #print("Area Under Curve: ")
-    #print(Feature.findAreaUnderCurve(newData))
-    #print("Avg Slope: ")
-    #print(Feature.findAvgSlope(newData))
-    #print("Skewness: ")
-    #print(Feature.findSkewness(newData))
-    #print("Time to peak: ")
-    #print(Feature.findTimeToPeak(newData))
-    
+    print("Extraplating and saving features for cleaned data... This will take a sec\n")
+    #features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
+    print("Finished saving feature files\n")
 
     # -- Plotting features --
     #col = 2
     #data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)
     #data = Data.rescale2D(data)
     #grapher.plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files
+
+    # -- Ranking features --
+    print("Ranking features by data type\n")
+    #Method to build corr matrices and avgs goes here!!!
+    print("Finished ranking features\n")
