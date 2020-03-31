@@ -24,23 +24,23 @@ featureDirectory: This is the path of the directory where one would like to expo
 It is extremely important that the filesystem for the data matches the file system that is in the repository! These methods are robust, but they are not designed to handle all structures of data, so some thought is advised before attempting to use different file schemes to produce and rank features.
 
 The data is processed and cleaned in the following scheme:
-Phone/Shoe
-  Activity (Running, Driving, etc.)
-    Data Source (Shoe 1, Shoe 2, acc, gyro)
-      Event (Running Example 1, 2, etc.)
-        Chunk
-          Dataframes representing a portion of the .csv
+  - Phone/Shoe
+  - Activity (Running, Driving, etc.)
+  - Source (Shoe 1, Shoe 2, acc, gyro)
+  - (Running Example 1, 2, etc.)
+  - Chunk
+  - Dataframes representing a portion of the .csv
         
 The features are generated in the following scheme:
-Phone/Shoe
-  Activity (Running, Driving, etc.)
-    Data Source (Shoe 1, Shoe 2, acc, gyro)
-      Event (Running Example 1, 2, etc.)
-        Dataframes representing the features generated for each chunk of data
+  - Phone/Shoe
+  - Activity (Running, Driving, etc.)
+  - Data Source (Shoe 1, Shoe 2, acc, gyro)
+  - Event (Running Example 1, 2, etc.)
+  - Dataframes representing the features generated for each chunk of data
         
 The methods are relatively robust, so the program can handle different structures of data being passed in with the caveat that the FeatureUtil method that best reflects the point in the data being passed in must be used. 
 
-1. Broadly speaking, the workflow is something like this:
+Broadly speaking, the workflow is something like this:
   - Read in the data
     - Use ReadFilePaths or ReadByFileRate in FileReaderUtil
   - Synchronize the data
