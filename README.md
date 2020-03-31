@@ -1,8 +1,8 @@
-### Machine Learning Activity Classification Phase 1
+# Machine Learning Activity Classification Phase 1
 
 ## Authors: Koi Stephanos and Jacob Hoyos
 
-# General Project Details:
+### General Project Details:
 
 - Purpose: To prepare a dataset for use with machine learning algorithms by cleaning the data, dividing it, and selecting features using - feature analysis.
 - Language: Python v3.7
@@ -10,11 +10,11 @@
 - Included Libraries: Pandas, Numpy, Statistics, SciPy
 - Current Issues: None
 
-# Installation:
+### Installation:
 
 The project was originally created using cookiecutter code from visual studio, so, for the most seamless experience, using Visual Studio with the python development environment is highly recommended. Otherwise, the directory contains several python files that can be run. The Classifier file contains main, so if run from the commandline, the Classifier file should be the one to be executed. 
 
-# Usage Information:
+### Usage Information:
 
 Main is already structured for use. Simply uncomment the needed lines and execute the program. The important thing to note is that the filepaths for the directory, outputDirectory, and featureDirectory variables must be changed to reflect one's own file structure. 
 directory: This is the path of the directory to read the data from.
@@ -54,7 +54,7 @@ The methods are relatively robust, so the program can handle different structure
     - Use rankFeatures in FeatureUtil
   - Graph the Feature Analysis (optional)
 
-# Overview of the Python Files:
+### Overview of the Python Files:
 
 - Classifier: The Driver class that contains main and some static methods for building the organizational data structure that will allow one to iterate over all of the data files in the project. 
 - DataUtil: A static class that contains the methods to clean the data, convert between data types, and scale columns in the data.
