@@ -4,11 +4,11 @@ Authors: Koi Stephanos and Jacob Hoyos
 
 General Project Details:
 
-Purpose: To prepare a dataset for use with machine learning algorithms by cleaning the data, dividing it, and selecting features using feature analysis.
-Language: Python v3.7
-Status: Building and Running - Last Updated 3/31/2020
-Included Libraries: Pandas, Numpy, Statistics, SciPy
-Current Issues: None
+- Purpose: To prepare a dataset for use with machine learning algorithms by cleaning the data, dividing it, and selecting features using - feature analysis.
+- Language: Python v3.7
+- Status: Building and Running - Last Updated 3/31/2020
+- Included Libraries: Pandas, Numpy, Statistics, SciPy
+- Current Issues: None
 
 Installation:
 
@@ -40,7 +40,7 @@ Phone/Shoe
         
 The methods are relatively robust, so the program can handle different structures of data being passed in with the caveat that the FeatureUtil method that best reflects the point in the data being passed in must be used. 
 
-Broadly speaking, the workflow is something like this:
+1. Broadly speaking, the workflow is something like this:
   -Read in the data
     - Use ReadFilePaths or ReadByFileRate in FileReaderUtil
   -Synchronize the data
