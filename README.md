@@ -64,5 +64,7 @@ Broadly speaking, the workflow is something like this:
 - StringUtil: A static class that contains some additional string methods 
 - SynchronizationUtil: A static class that contains the methods for breaking the data into chunks and synchronizing the data according to the first column (Time).
 
+## License
 
+This project is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
