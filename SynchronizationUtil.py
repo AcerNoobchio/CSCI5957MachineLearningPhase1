@@ -53,7 +53,8 @@ class SynchronizationUtil(object):
         # Steph through each interval, creating the corresponding chunk and appending it to result
         for chunk in range(1,time_span):
             df = dataFrame[(dataFrame.iloc[:,0] >= last_time) & (dataFrame.iloc[:,0] < next_time)]
-            result.append(df)
+            if len(df) > 1:
+                result.append(df)
             next_time += miliSecondInterval
             last_time += miliSecondInterval
 

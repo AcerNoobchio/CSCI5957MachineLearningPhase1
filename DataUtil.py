@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn import preprocessing
 
 class DataUtil:
     """Holds utility methods that serve to scale data for specific shapes"""
@@ -66,10 +67,8 @@ class DataUtil:
         dataFrames = list()
         for d in data:
             d = pd.DataFrame(d, columns=labels)
-            print("Starting length: {0}\n".format(len(d)))
-            d = DataUtil.cleanRows(d, 4)
-            print("Ending length: {0}\n".format(len(d)))
-            dataFrames.append(d)
+            cleanD = DataUtil.cleanRows(d, 4)
+            dataFrames.append(cleanD)
 
         return dataFrames
 
@@ -103,3 +102,10 @@ class DataUtil:
                 for i in range(0, len(labels)):
                     newLabels.append(col +" "+ labels[i])
         return newLabels
+
+    def minMaxScaleDataFrame(df):
+        x = df.values #returns a numpy array
+        min_max_scaler = preprocessing.MinMaxScaler()
+        x_scaled = min_max_scaler.fit_transform(x)
+        df = pd.DataFrame(x_scaled)
+        return df

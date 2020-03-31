@@ -69,5 +69,8 @@ class GraphUtil:
         for i in range(0,len(dataIn)):
             GraphUtil.plotGraph(self, dataIn[i], maxY, String.extractFileName(filePaths[i]), plotDescription, outputDirectory)
 
-
+    def plotRankedFeatures(dataIn, filenameIn, outputDirectory):
+        dataIn.plot(kind='bar', x='Feature', y='Normalized Variance')
+        
+        plt.savefig(outputDirectory+sub_dir+fileNameIn+fileAddendum)
 

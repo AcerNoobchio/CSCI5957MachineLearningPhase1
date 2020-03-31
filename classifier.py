@@ -58,6 +58,40 @@ def synchronizeDataFromPaths(paths):
 
     return allDataDFs
 
+def getFeatureRankings(activityFeatures):
+    rankedFeatures = {"Left": [], "Right": [], "Acc": [], "Gyro": []}
+    leftShoeData = []
+    rightShoeData = []
+    accData = []
+    gyroData = []
+
+
+    firstTimeThrough = False
+
+    for dataType in activityFeatures:
+        firstTimeThrough = not firstTimeThrough
+        for activity in dataType:
+            for dataSource in activity:
+                    if firstTimeThrough:
+                        leftShoeData.append(dataSource[0])
+                        rightShoeData.append(dataSource[1])
+                    else:
+                        accData.append(dataSource[0])
+                        gyroData.append(dataSource[1])
+
+    rankedFeatures["Left"] = Feature.rankFeatures(leftShoeData)
+    rankedFeatures["Right"] = Feature.rankFeatures(rightShoeData)
+    rankedFeatures["Acc"] = Feature.rankFeatures(accData)
+    rankedFeatures["Gyro"] = Feature.rankFeatures(gyroData)
+
+    return rankedFeatures
+
+#This doesn't work, need to convert properly from list to dataframe
+def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
+    for key in rankedFeatures:
+        df = pd.DataFrame(rankedFeatures[key])
+        #Graph.plotRankedFeatures(df.head(numFeatures), (key+"RankedFeaturesGraph"), outputDirectory)
+
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     print("Setting up enviornment and collecting paths to raw data files\n")
@@ -80,12 +114,12 @@ if __name__ == '__main__':
     allDataDFs = synchronizeDataFromPaths(paths)
     print("Finished synchronizing/cleaning raw data\n")
     
-    # -- Testing Feature methods --  
+    # -- Generate features for each chunk of data, saving in .csv files --  
     print("Extraplating and saving features for cleaned data... This will take a sec\n")
-    #features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
+    features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
     print("Finished saving feature files\n")
 
-    # -- Plotting features --
+    # -- Plotting features (currently non-functional) --
     #col = 2
     #data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)
     #data = Data.rescale2D(data)
@@ -93,5 +127,6 @@ if __name__ == '__main__':
 
     # -- Ranking features --
     print("Ranking features by data type\n")
-    #Method to build corr matrices and avgs goes here!!!
+    rankedFeatures = getFeatureRankings(features)
+    #plotRankedFeaturesByType(rankedFeatures, featureDirectory, 10)
     print("Finished ranking features\n")

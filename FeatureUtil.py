@@ -5,6 +5,7 @@ import scipy.integrate as deriv
 import scipy.stats as sciStats
 import scipy.signal as sig
 from DataUtil import DataUtil as Rescale
+
 class FeatureUtil:
     """Assuming individual 2-minute spans of 2d data being passed in (time x feature)"""
 
@@ -147,7 +148,7 @@ class FeatureUtil:
             filePath = directoryToSave+"Event"+str(eventNum)+".csv"
             newEventFeatures = FeatureUtil.exportChunkFeatures(shoe)
             shoeFrame.append(newEventFeatures)
-            newEventFeatures.to_csv(filePath)      #Export the csv
+            #newEventFeatures.to_csv(filePath)      #Export the csv
         return shoeFrame
 
     #Iterates through the chunks in the data frame, sending each chunk to be analyzed
@@ -160,7 +161,7 @@ class FeatureUtil:
             filePath = directory+"Event"+str(i)+".csv"
             newEventFeatures = FeatureUtil.exportChunkFeatures(chunk)
             chunkFrame.append(newEventFeatures)
-            newEventFeatures.to_csv(filePath)      #Export the csv
+            #newEventFeatures.to_csv(filePath)      #Export the csv
             i+=1
 
         return chunkFrame
@@ -274,4 +275,16 @@ class FeatureUtil:
         newList = np.transpose(newList)     #comes in as a row, need to make it a column
         featureFrame = pd.DataFrame(data=featureList, index = labels, columns = colLabels)
         return featureFrame
+
+    #Takes a list of dataFrames, combines them, builds a correlation matrix, and then returns the sorted means of that matrix
+    def rankFeatures(features):
+        df = pd.concat(features)
+        df = Rescale.minMaxScaleDataFrame(df)
+        df.columns = features[0].columns
+        varMatrix = df.var()
+        columnVars = {}
+        for col in df:
+            columnVars[col] = df[col].var().round(3)
+
+        return columnVars
 

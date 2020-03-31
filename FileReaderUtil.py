@@ -21,12 +21,20 @@ class FileReader:
         data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         tempEvent = []
 
+        accCols = (1, 4, 6, 8)
+        gyroCols = (1, 10, 12, 14)
+
         for dir in filePaths:
             #Collects data per event, scanning file for name. Up to 4 events per activity
             for event in range(1,5):   
                 for file in filePaths[dir]:
                     if str(event) in os.path.split(file)[1]:
-                        tempEvent.append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
+                        if "Acc" in file:
+                            tempEvent.append(FileReader.ReadFile(file, rowsToSkip, accCols, 1))
+                        elif "Gyro" in file:
+                            tempEvent.append(FileReader.ReadFile(file, rowsToSkip, gyroCols, 1))
+                        else:
+                            tempEvent.append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
                 if len(tempEvent) > 0:
                     data[dir].append(tempEvent)
                     tempEvent = []
