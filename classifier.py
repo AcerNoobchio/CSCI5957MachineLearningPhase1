@@ -95,29 +95,30 @@ def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     print("Setting up enviornment and collecting paths to raw data files\n")
-    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
-    paths = FileReader.ReadFilePaths(directory, sub_directories)
+    parent_directories = ['Phone', 'Shoe']
+    #paths = FileReader.ReadFilePaths(directory, sub_directories)
     
     # -- Graph all the raw data --
-    print("Graphing all the raw data\n")
+    #print("Graphing all the raw data\n")
     #graphRawData(paths, 40, outputDirectory)
-    print("Finished graphing raw data\n")
+    #print("Finished graphing raw data\n")
 
     # -- Synchronizing data
-    print("Synchronizing and cleaning raw data... This could take a sec\n")
-    allDataDFs = synchronizeDataFromPaths(paths)
-    print("Finished synchronizing/cleaning raw data\n")
+    #print("Synchronizing and cleaning raw data... This could take a sec\n")
+    #allDataDFs = synchronizeDataFromPaths(paths)
+    #print("Finished synchronizing/cleaning raw data\n")
     
     # -- Generate features for each chunk of data, saving in .csv files --  
-    print("Extraplating and saving features for cleaned data... This will take a sec\n")
-    features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
-    print("Finished saving feature files\n")
+    #print("Extraplating and saving features for cleaned data... This will take a sec\n")
+    #features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
+    #print("Finished saving feature files\n")
 
     # -- Plotting features (currently non-functional) --
     #col = 2
@@ -125,8 +126,13 @@ if __name__ == '__main__':
     #data = Data.rescale2D(data)
     #grapher.plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files
 
+    # -- Reading Features -- 
+    print("Loading feature Data....\n")
+    paths = FileReader.ReadFeaturePaths(featureDirectory, parent_directories, sub_directories)
+    features = FileReader.ReadByFileFeatures(paths, 0)
+    print("Feature Data Sucessfully Loaded\n")
     # -- Ranking features --
-    print("Ranking features by data type\n")
-    rankedFeatures = getFeatureRankings(features)
+    #print("Ranking features by data type\n")
+    #rankedFeatures = getFeatureRankings(features)
     #plotRankedFeaturesByType(rankedFeatures, featureDirectory, 10)
-    print("Finished ranking features\n")
+    #print("Finished ranking features\n")

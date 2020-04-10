@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import glob as files
 import os
 
@@ -22,7 +23,8 @@ class FileReader:
         tempEvent = []
 
         accCols = (1, 4, 6, 8)
-        gyroCols = (1, 10, 12, 14)
+        #gyroCols = (1, 10, 12, 14)
+        gyroCols = (1, 4, 6, 8)
 
         for dir in filePaths:
             #Collects data per event, scanning file for name. Up to 4 events per activity
@@ -41,6 +43,39 @@ class FileReader:
         finalData = np.asarray(data)
         return data
 
+    def ReadByFileFeatures(filePaths, rowsToSkip):
+        data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}}
+        dataTypes = {'Phone' : {}, 'Shoe' : {}}
+        phoneTypes = {'Acc': [], 'Gyro': []}
+        shoeTypes = {'Left': [], 'Right': []}
+
+        for dir in filePaths:
+            #Collects data per event, scanning file for name. Up to 4 events per activity
+            for event in range(0,5):   
+                for folder, fileList in filePaths[dir].items():
+                    for file in fileList:
+                            if 'Gyro' in file:
+                                phoneTypes['Gyro'].append(FileReader.ReadFileNative(file, rowsToSkip))
+                            elif 'Acc' in file:
+                                phoneTypes['Acc'].append(FileReader.ReadFileNative(file, rowsToSkip))
+                            elif 'Left' in file:
+                                shoeTypes['Left'].append(FileReader.ReadFileNative(file, rowsToSkip))
+                            elif 'Right' in file:
+                                shoeTypes['Right'].append(FileReader.ReadFileNative(file, rowsToSkip))
+
+                    if len(phoneTypes['Gyro']) > 0 or len(phoneTypes['Acc']) > 0:
+                        data[folder].update(phoneTypes)
+                        phoneTypes = {'Acc': [], 'Gyro': []}
+                    
+                    if len(shoeTypes['Left']) > 0 or len(shoeTypes['Right']) > 0:
+                        data[folder].update(shoeTypes)
+                        shoeTypes = {'Left': [], 'Right': []}
+
+                if len(data[folder]) > 0:
+                    dataTypes[dir].update(data)
+                    data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}}
+        return dataTypes
+
     @staticmethod
     def ReadByFileRate(filePaths, rowsToSkip, colsToUse, rate):
         data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
@@ -49,6 +84,22 @@ class FileReader:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, rate))
         finalData = np.asarray(data)
         return data
+
+    @staticmethod
+    def ReadFileNative(filename, skipRows):
+        labels = []
+        data = []
+        with open(filename) as f:
+            i = 0
+            for line in f:
+                if(i == 0):
+                    labels.append(line)
+                else:
+                    data.append(line)
+                i+=1
+            finalData = pd.DataFrame(data, columns = labels)
+            return finalData
+
 
     #Reads in the lines of a file, only reading in the only nth file where n is the passed-in rate
     @staticmethod
@@ -62,6 +113,31 @@ class FileReader:
                 i+=1
             finalData = np.genfromtxt(data, delimiter=",", skip_header=skipRows, usecols = colsToUse)
             return finalData
+
+    def ReadFeaturePaths(directory, parent_directories, sub_directories):
+        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 
+                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
+        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+        shoeDirectories = ["Left", "Right"]
+        phoneDirectories = ["Acc", "Gyro"]
+
+        for p_directory in parent_directories:
+            for sub_dir in sub_directories:
+                if "Phone" in p_directory:
+                    for phone_dir in phoneDirectories:
+                        dataFiles[sub_dir].extend(files.glob(directory+p_directory+"\\"+sub_dir+"\\"+phone_dir+'\\*.csv'))
+                else:
+                    for shoe_dir in shoeDirectories:
+                        dataFiles[sub_dir].extend(files.glob(directory+p_directory+"\\"+sub_dir+"\\"+shoe_dir+'\\*.csv'))
+            for dir in dataFiles:
+                for file in dataFiles[dir]:
+                    if file.find("Left") > 0 or file.find("Right") > 0:
+                        fileNames['Shoe'][dir].append(file)
+                    elif file.find("Acc") > 0 or file.find("Gyro") > 0:
+                        fileNames['Phone'][dir].append(file)
+
+        return fileNames
+
 
     #collects all of the filenames in a given directory
     @staticmethod
