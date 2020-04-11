@@ -148,7 +148,7 @@ class FeatureUtil:
             filePath = directoryToSave+"Event"+str(eventNum)+".csv"
             newEventFeatures = FeatureUtil.exportChunkFeatures(shoe)
             shoeFrame.append(newEventFeatures)
-            #newEventFeatures.to_csv(filePath)      #Export the csv
+            newEventFeatures.to_csv(filePath)      #Export the csv
         return shoeFrame
 
     #Iterates through the chunks in the data frame, sending each chunk to be analyzed

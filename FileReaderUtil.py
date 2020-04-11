@@ -23,8 +23,8 @@ class FileReader:
         tempEvent = []
 
         accCols = (1, 4, 6, 8)
-        #gyroCols = (1, 10, 12, 14)
-        gyroCols = (1, 4, 6, 8)
+        gyroCols = (1, 10, 12, 14)
+        #gyroCols = (1, 4, 6, 8)
 
         for dir in filePaths:
             #Collects data per event, scanning file for name. Up to 4 events per activity
@@ -131,10 +131,12 @@ class FileReader:
                         dataFiles[sub_dir].extend(files.glob(directory+p_directory+"\\"+sub_dir+"\\"+shoe_dir+'\\*.csv'))
             for dir in dataFiles:
                 for file in dataFiles[dir]:
-                    if file.find("Left") > 0 or file.find("Right") > 0:
-                        fileNames['Shoe'][dir].append(file)
-                    elif file.find("Acc") > 0 or file.find("Gyro") > 0:
-                        fileNames['Phone'][dir].append(file)
+                    if os.path.isfile(file):
+                        if file.find("Left") > 0 or file.find("Right") > 0:
+                            fileNames['Shoe'][dir].append(file)
+                        elif file.find("Acc") > 0 or file.find("Gyro") > 0:
+                            fileNames['Phone'][dir].append(file)
+            dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
 
         return fileNames
 

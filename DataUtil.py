@@ -109,3 +109,18 @@ class DataUtil:
         x_scaled = min_max_scaler.fit_transform(x)
         df = pd.DataFrame(x_scaled)
         return df
+    @staticmethod
+    def combineEventFeatures(activityFeatures):
+            combinedFeatures = {}
+            eventNum = -1
+            for dataType in activityFeatures:
+                for activity in dataType:
+                    for dataSource in activity:
+                        for eventFile in dataSource:
+                            eventNum += 1
+                            if eventNum == 0:
+                                combinedFeatures[activity][eventNum] = eventFile
+                            else:
+                                combinedFeatures[activity][eventNum] = pd.merge(combinedFeatures[activity][eventNum], eventFile)
+            
+            return combinedFeatures
