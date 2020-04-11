@@ -130,6 +130,7 @@ if __name__ == '__main__':
     print("Loading feature Data....\n")
     paths = FileReader.ReadFeaturePaths(featureDirectory, parent_directories, sub_directories)
     features = FileReader.ReadByFileFeatures(paths, 0)
+    combinedFeatures = Data.combineEventFeatures(features)
     print("Feature Data Sucessfully Loaded\n")
     # -- Ranking features --
     #print("Ranking features by data type\n")

@@ -109,18 +109,21 @@ class DataUtil:
         x_scaled = min_max_scaler.fit_transform(x)
         df = pd.DataFrame(x_scaled)
         return df
+
+
     @staticmethod
     def combineEventFeatures(activityFeatures):
-            combinedFeatures = {}
+            combinedFeatures = {'Cycling': [0,0], 'Driving': [0,0,0,0], 'Running': [0,0,0], 'Sitting': [0,0,0], 'StairDown': [0,0,0], 'StairUp': [0,0,0], 'Standing': [0,0,0]}
             eventNum = -1
-            for dataType in activityFeatures:
-                for activity in dataType:
-                    for dataSource in activity:
+            for dataTypeLabel, dataTypeList in activityFeatures.items():
+                for activityLabel, activity in dataTypeList.items():
+                    for dataSourceLabel, dataSource in activity.items():
+                        eventNum = -1
                         for eventFile in dataSource:
                             eventNum += 1
-                            if eventNum == 0:
-                                combinedFeatures[activity][eventNum] = eventFile
+                            if isinstance(combinedFeatures[activityLabel][eventNum], int):
+                                combinedFeatures[activityLabel][eventNum] = eventFile
                             else:
-                                combinedFeatures[activity][eventNum] = pd.merge(combinedFeatures[activity][eventNum], eventFile)
+                                combinedFeatures[activityLabel][eventNum] = pd.merge(combinedFeatures[activityLabel][eventNum], eventFile)
             
             return combinedFeatures
