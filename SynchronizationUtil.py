@@ -30,7 +30,11 @@ class SynchronizationUtil(object):
             curr_latest = data_frames[df]['Time (Milliseconds)'].iloc[-1]
             curr_earliest = data_frames[df]['Time (Milliseconds)'].iloc[0]
             curr_time_span = (curr_latest - curr_earliest)/1000
-            temp_df = data_frames[df].drop(data_frames[df][(data_frames[df]['Time (Milliseconds)'] < earliest_time) & (data_frames[df]['Time (Milliseconds)'] > latest_time)].index)
+            too_early = data_frames[df][(data_frames[df]['Time (Milliseconds)'] < earliest_time)].index
+            too_late = data_frames[df][(data_frames[df]['Time (Milliseconds)'] > latest_time)].index
+            temp_df = data_frames[df].drop(too_early)
+            temp_df = temp_df.drop(too_late)
+            data_frames[df] = temp_df
             curr_latest = temp_df['Time (Milliseconds)'].iloc[-1]
             curr_earliest = temp_df['Time (Milliseconds)'].iloc[0]
             curr_time_span = (curr_latest - curr_earliest)/1000
@@ -61,8 +65,8 @@ class SynchronizationUtil(object):
         # Steph through each interval, creating the corresponding chunk and appending it to result
         for chunk in range(1,time_span):
             df = dataFrame[(dataFrame.iloc[:,0] >= last_time) & (dataFrame.iloc[:,0] < next_time)]
-            if len(df) > 1:
-                result.append(df)
+            #if len(df) > 1:
+            result.append(df)
             next_time += miliSecondInterval
             last_time += miliSecondInterval
 
