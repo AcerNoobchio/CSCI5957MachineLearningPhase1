@@ -27,6 +27,8 @@ class GraphUtil:
             sub_dir = "StairUp\\"
         elif 'Sd' in fileNameIn:
             sub_dir = "Standing\\"
+        elif 'Wa' in fileNameIn:	
+            sub_dir = "Walking\\"
     
         plt.savefig(outputDirectory+sub_dir+fileNameIn+fileAddendum)
 
