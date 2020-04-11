@@ -109,8 +109,7 @@ class FeatureUtil:
     def exportFrameFeatures(activities, directory):
         activityFrame = []
         for key, value in activities.items():
-            if "Driving" in key:
-                print("Yo")
+            print("Exporting features for: " + key)
             directoryToSend = directory+key+"\\"
             activityFrame.append(FeatureUtil.exportActivityFeatures(value, directoryToSend))
         return activityFrame
@@ -148,6 +147,7 @@ class FeatureUtil:
             filePath = directoryToSave+"Event"+str(eventNum)+".csv"
             newEventFeatures = FeatureUtil.exportChunkFeatures(shoe)
             shoeFrame.append(newEventFeatures)
+            print('Saving Event at Path: ' + filePath)
             newEventFeatures.to_csv(filePath)      #Export the csv
         return shoeFrame
 

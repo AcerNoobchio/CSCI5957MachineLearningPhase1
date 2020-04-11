@@ -111,14 +111,14 @@ if __name__ == '__main__':
     #print("Finished graphing raw data\n")
 
     # -- Synchronizing data
-    #print("Synchronizing and cleaning raw data... This could take a sec\n")
+    print("Synchronizing and cleaning raw data... This could take a sec\n")
     allDataDFs = synchronizeDataFromPaths(paths)
-    #print("Finished synchronizing/cleaning raw data\n")
+    print("Finished synchronizing/cleaning raw data\n")
     
     # -- Generate features for each chunk of data, saving in .csv files --  
-    #print("Extraplating and saving features for cleaned data... This will take a sec\n")
+    print("Extraplating and saving features for cleaned data... This will take a sec\n")
     features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
-    #print("Finished saving feature files\n")
+    print("Finished saving feature files\n")
 
     # -- Plotting features (currently non-functional) --
     #col = 2

@@ -23,8 +23,8 @@ class FileReader:
         tempEvent = []
 
         accCols = (1, 4, 6, 8)
-        #gyroCols = (1, 10, 12, 14)
-        gyroCols = (1, 4, 6, 8)
+        gyroCols = (1, 10, 12, 14)
+        #gyroCols = (1, 4, 6, 8)
 
         for dir in filePaths:
             #Collects data per event, scanning file for name. Up to 4 events per activity
