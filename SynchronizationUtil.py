@@ -15,7 +15,7 @@ class SynchronizationUtil(object):
             if df.iloc[0][0] > earliest_time:
                 earliest_time = df.iloc[0][0]
 
-            # If the start time is later than current, update earliest_time
+            # If the end time is earlier than current, update latest_time
             if df.iloc[-1][0] < latest_time:
                 latest_time = df.iloc[-1][0]
         
@@ -23,9 +23,17 @@ class SynchronizationUtil(object):
         earliest_time += 3000
         latest_time -= 3000
 
+        time_span = (latest_time - earliest_time)/1000
+
         # Trim starts and ends of dataframes with obtained start/end times
-        for df in data_frames:
-            df = df.drop(df[(df.iloc[:,0] < earliest_time) & (df.iloc[:,0] > latest_time)].index)
+        for df in range(0, len(data_frames)):
+            curr_latest = data_frames[df]['Time (Milliseconds)'].iloc[-1]
+            curr_earliest = data_frames[df]['Time (Milliseconds)'].iloc[0]
+            curr_time_span = (curr_latest - curr_earliest)/1000
+            temp_df = data_frames[df].drop(data_frames[df][(data_frames[df]['Time (Milliseconds)'] < earliest_time) & (data_frames[df]['Time (Milliseconds)'] > latest_time)].index)
+            curr_latest = temp_df['Time (Milliseconds)'].iloc[-1]
+            curr_earliest = temp_df['Time (Milliseconds)'].iloc[0]
+            curr_time_span = (curr_latest - curr_earliest)/1000
 
         return data_frames
 

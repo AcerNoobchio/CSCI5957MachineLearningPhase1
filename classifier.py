@@ -46,15 +46,23 @@ def synchronizeDataFromPaths(paths):
                 allDataDFs[dataType][activity].append(tempEvents)
     
     chunkedEvents = []
-    for dataType in paths:
-        for activity in allDataDFs[dataType]:
-            for event in allDataDFs[dataType][activity]:
-                event = Synchronization.trim_start_end_times(event)
-                for index in range(0,len(event)):
-                    event[index] = Synchronization.chunkify_data_frame(event[index])
-                chunkedEvents.append(event)
-            allDataDFs[dataType][activity] = chunkedEvents
-            chunkedEvents = []
+    # Gather events to trim together
+    for activity in allDataDFs['Shoe']:
+        for event in range(0, len(allDataDFs['Shoe'][activity])):
+            activityDFs[activity].append(allDataDFs['Shoe'][activity][event])
+            activityDFs[activity][event] = [*activityDFs[activity][event], *allDataDFs['Phone'][activity][event]]
+
+    # Trim start/end times per event
+    for activity in activityDFs:
+        for event in activityDFs[activity]:
+           event = Synchronization.trim_start_end_times(event)
+
+    for activity in activityDFs:
+        for event in range(0,len(activityDFs[activity])):
+            allDataDFs['Shoe'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][0])
+            allDataDFs['Shoe'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][1])
+            allDataDFs['Phone'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][2])
+            allDataDFs['Phone'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][3])
 
     return allDataDFs
 
