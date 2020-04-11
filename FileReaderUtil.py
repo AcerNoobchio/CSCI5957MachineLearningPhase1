@@ -10,7 +10,7 @@ class FileReader:
 #Reads in features by file - Currently not working - need to refactor to return data instead of graphing it
     @staticmethod
     def ReadByFile(filePaths, rowsToSkip, colsToUse):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, 1))
@@ -19,12 +19,12 @@ class FileReader:
 
     @staticmethod
     def ReadByFileEvent(filePaths, rowsToSkip, colsToUse):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         tempEvent = []
 
         accCols = (1, 4, 6, 8)
-        gyroCols = (1, 10, 12, 14)
-        #gyroCols = (1, 4, 6, 8)
+        #gyroCols = (1, 10, 12, 14)
+        gyroCols = (1, 4, 6, 8)
 
         for dir in filePaths:
             #Collects data per event, scanning file for name. Up to 4 events per activity
@@ -44,7 +44,7 @@ class FileReader:
         return data
 
     def ReadByFileFeatures(filePaths, rowsToSkip):
-        data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}, 'Walking': {}}
+        data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}}
         dataTypes = {'Phone' : {}, 'Shoe' : {}}
         phoneTypes = {'Acc': [], 'Gyro': []}
         shoeTypes = {'Left': [], 'Right': []}
@@ -73,12 +73,12 @@ class FileReader:
 
                 if len(data[folder]) > 0:
                     dataTypes[dir].update(data)
-                    data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}, 'Walking': {}}
+                    data = {'Cycling': {}, 'Driving': {}, 'Running': {}, 'Sitting': {}, 'StairDown': {}, 'StairUp': {}, 'Standing': {}}
         return dataTypes
 
     @staticmethod
     def ReadByFileRate(filePaths, rowsToSkip, colsToUse, rate):
-        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        data = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for dir in filePaths:
             for file in filePaths[dir]:
                 data[dir].append(FileReader.ReadFile(file, rowsToSkip, colsToUse, rate))
@@ -115,9 +115,9 @@ class FileReader:
             return finalData
 
     def ReadFeaturePaths(directory, parent_directories, sub_directories):
-        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}, 
-                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}}
-        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 
+                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
+        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         shoeDirectories = ["Left", "Right"]
         phoneDirectories = ["Acc", "Gyro"]
 
@@ -131,12 +131,10 @@ class FileReader:
                         dataFiles[sub_dir].extend(files.glob(directory+p_directory+"\\"+sub_dir+"\\"+shoe_dir+'\\*.csv'))
             for dir in dataFiles:
                 for file in dataFiles[dir]:
-                    if os.path.isfile(file):
-                        if file.find("Left") > 0 or file.find("Right") > 0:
-                            fileNames['Shoe'][dir].append(file)
-                        elif file.find("Acc") > 0 or file.find("Gyro") > 0:
-                            fileNames['Phone'][dir].append(file)
-            dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+                    if file.find("Left") > 0 or file.find("Right") > 0:
+                        fileNames['Shoe'][dir].append(file)
+                    elif file.find("Acc") > 0 or file.find("Gyro") > 0:
+                        fileNames['Phone'][dir].append(file)
 
         return fileNames
 
@@ -144,9 +142,9 @@ class FileReader:
     #collects all of the filenames in a given directory
     @staticmethod
     def ReadFilePaths(directory, sub_directories):
-        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}, 
-                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}}
-        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': [], 'Walking': []}
+        fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 
+                     'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
+        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         for sub_dir in sub_directories:
             dataFiles[sub_dir].extend(files.glob(directory+sub_dir+'\\*.csv'))
         for dir in dataFiles:
