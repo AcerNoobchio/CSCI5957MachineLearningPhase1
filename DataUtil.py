@@ -196,4 +196,21 @@ class DataUtil:
                 eventNum += 1
             eventsToCombine[activityLabel] = tempDataframe
         return eventsToCombine
+
+    #combines all of the activity dataframes into a single, gigantic dataframe - adds the name of the activity as a column
+    @staticmethod
+    def combineActivities(activities):
+        combinedFeatures = pd.DataFrame()
+        activityNames = []
+        activityNum = 0
+        for activityLabel, dataFrame in activities.items():
+            if activityNum == 0:
+                combinedFeatures = dataFrame
+            else:
+                combinedFeatures = combinedFeatures.append(dataFrame)
+            for i in range(0, dataFrame.shape[0]):
+                activityNames.append(activityLabel)
+            activityNum += 1
+        combinedFeatures.insert(0, "Activity", activityNames)
+        return combinedFeatures
             

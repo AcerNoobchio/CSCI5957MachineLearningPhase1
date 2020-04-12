@@ -152,18 +152,25 @@ if __name__ == '__main__':
     print("Feature Data Sucessfully Loaded\n")
 
 
-    for activity in combinedFeatures:
-        for event in range(0, len(combinedFeatures[activity])):
-            filePath = combinedFeatureDirectory+activity+"Event"+str(event)+".csv"
-            print('Saving Combined Event at Path: ' + filePath)
-            combinedFeatures[activity][event].to_csv(filePath)
+
+    #for activity in combinedFeatures:
+    #    for event in range(0, len(combinedFeatures[activity])):
+    #        filePath = combinedFeatureDirectory+activity+"Event"+str(event)+".csv"
+    #        print('Saving Combined Event at Path: ' + filePath)
+    #        combinedFeatures[activity][event].to_csv(filePath)
+
+
     combinedActivities = Data.combineActivityFeatures(combinedFeatures)
 
-    for activity in combinedActivities:
-        filePath = combinedFeatureDirectory+activity+".csv"
-        print('Saving Combined Event at Path: ' + filePath)
-        combinedActivities[activity].to_csv(filePath)
+    #for activity in combinedActivities:
+    #    filePath = combinedFeatureDirectory+activity+".csv"
+    #    print('Saving Combined Event at Path: ' + filePath)
+    #    combinedActivities[activity].to_csv(filePath)
 
+    allCombined = Data.combineActivities(combinedActivities)
+
+    filePath = combinedFeatureDirectory+"AllFiles"+".csv"
+    allCombined.to_csv(filePath)
 
     # -- Ranking features --
     #print("Ranking features by data type\n")
