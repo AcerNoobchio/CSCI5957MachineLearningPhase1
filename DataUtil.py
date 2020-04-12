@@ -176,6 +176,24 @@ class DataUtil:
                     #frameToCombine = pd.merge(frameToCombine, rightFeatures[activity][eventNum], how ='outer') #Combine all of the data horizontally
                     frameToCombine = pd.concat([frameToCombine, rightFeatures[activity][eventNum]], axis=1, ignore_index = False, sort=False) #Combine all of the data horizontally
                     combinedFeatures[activity][eventNum] = frameToCombine
-                eventNum += 1
+                    eventNum += 1
                                                    
             return combinedFeatures
+
+    #combines all of the rows of all of an activity's related events
+    @staticmethod
+    def combineActivityFeatures(combinedEvents):
+        eventsToCombine = {}
+        labels = combinedEvents.keys
+        
+        for activityLabel, event in combinedEvents.items():
+            eventNum = 0
+            for eventFrame in event:
+                if eventNum == 0:
+                    tempDataframe = eventFrame
+                else:
+                    tempDataframe = tempDataframe.append(eventFrame)
+                eventNum += 1
+            eventsToCombine[activityLabel] = tempDataframe
+        return eventsToCombine
+            
