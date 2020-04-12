@@ -103,12 +103,13 @@ def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     print("Setting up enviornment and collecting paths to raw data files\n")
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
+    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
+    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     parent_directories = ['Phone', 'Shoe']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
@@ -140,6 +141,13 @@ if __name__ == '__main__':
     features = FileReader.ReadByFileFeatures(paths, 0)
     combinedFeatures = Data.combineEventFeatures(features)
     print("Feature Data Sucessfully Loaded\n")
+
+    for activity in combinedFeatures:
+        for event in range(0, len(combinedFeatures[activity])):
+            filePath = combinedFeatureDirectory+activity+"Event"+str(event)+".csv"
+            print('Saving Combined Event at Path: ' + filePath)
+            combinedFeatures[activity][event].to_csv(filePath)
+
     # -- Ranking features --
     #print("Ranking features by data type\n")
     #rankedFeatures = getFeatureRankings(features)
