@@ -137,7 +137,7 @@ class DataUtil:
                                 if isinstance(combinedFeatures[activityLabel][eventNum], int):
                                     combinedFeatures[activityLabel][eventNum] = eventFile
                                 else:
-                                    combinedFeatures[activityLabel][eventNum] = combinedFeatures[activityLabel][eventNum].append(eventFile, sort=False) #Right append
+                                    combinedFeatures[activityLabel][eventNum] = pd.concat([combinedFeatures[activityLabel][eventNum], eventFile], sort=False) #Right append
                             else:
                                 if "Right" in dataSourceLabel:
                                     if isinstance(rightFeatures[activityLabel][eventNum], int):
