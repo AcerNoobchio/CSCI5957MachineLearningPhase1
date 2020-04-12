@@ -154,8 +154,6 @@ if __name__ == '__main__':
     for activity in combinedFeatures:
         for event in range(0, len(combinedFeatures[activity])):
             filePath = combinedFeatureDirectory+activity+"Event"+str(event)+".csv"
-            if(os.path.exists(filePath)):
-                os.remove(filePath)
             print('Saving Combined Event at Path: ' + filePath)
             combinedFeatures[activity][event].to_csv(filePath, chunksize=1000)
 

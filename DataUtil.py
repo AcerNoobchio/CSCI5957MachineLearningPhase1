@@ -137,7 +137,7 @@ class DataUtil:
                                 if isinstance(combinedFeatures[activityLabel][eventNum], int):
                                     combinedFeatures[activityLabel][eventNum] = eventFile
                                 else:
-                                    combinedFeatures[activityLabel][eventNum] = pd.concat([combinedFeatures[activityLabel][eventNum], eventFile], sort=False) #Right append
+                                    combinedFeatures[activityLabel][eventNum] = pd.concat([combinedFeatures[activityLabel][eventNum], eventFile], sort=False, axis = 1) #Right append
                             else:
                                 if "Right" in dataSourceLabel:
                                     if isinstance(rightFeatures[activityLabel][eventNum], int):
@@ -174,7 +174,7 @@ class DataUtil:
                 eventNum = 0
                 for frameToCombine in event:
                     #frameToCombine = pd.merge(frameToCombine, rightFeatures[activity][eventNum], how ='outer') #Combine all of the data horizontally
-                    frameToCombine = pd.concat([frameToCombine, rightFeatures[activity][eventNum]], axis=0, ignore_index = True) #Combine all of the data horizontally
+                    frameToCombine = pd.concat([frameToCombine, rightFeatures[activity][eventNum]], axis=1, ignore_index = False, sort=False) #Combine all of the data horizontally
                     combinedFeatures[activity][eventNum] = frameToCombine
                 eventNum += 1
                                                    
