@@ -113,17 +113,69 @@ class DataUtil:
 
     @staticmethod
     def combineEventFeatures(activityFeatures):
-            combinedFeatures = {'Cycling': [0,0], 'Driving': [0,0,0,0], 'Running': [0,0,0], 'Sitting': [0,0,0], 'StairDown': [0,0,0], 'StairUp': [0,0,0], 'Standing': [0,0,0]}
+            combinedFeatures = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+            leftFeatures = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+            rightFeatures = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
+
+            #calculate dictionaries based on what is read in - this will keep us from having to change this method when we delete/include new data *crosses fingers*
+            for activityLabel, activity in activityFeatures["Phone"].items():
+                for event in range(0, len(activity['Gyro'])):
+                    combinedFeatures[activityLabel].append(0)
+                    leftFeatures[activityLabel].append(0)
+                    rightFeatures[activityLabel].append(0)
             eventNum = -1
+
+
+            #Merge the Phone data into the data frame and collect the left and right shoe data together to be merged in the next loop
             for dataTypeLabel, dataTypeList in activityFeatures.items():
                 for activityLabel, activity in dataTypeList.items():
                     for dataSourceLabel, dataSource in activity.items():
                         eventNum = -1
                         for eventFile in dataSource:
                             eventNum += 1
-                            if isinstance(combinedFeatures[activityLabel][eventNum], int):
-                                combinedFeatures[activityLabel][eventNum] = eventFile
+                            if "Gyro" in dataSourceLabel or "Acc" in dataSourceLabel:
+                                if isinstance(combinedFeatures[activityLabel][eventNum], int):
+                                    combinedFeatures[activityLabel][eventNum] = eventFile
+                                else:
+                                    combinedFeatures[activityLabel][eventNum] = combinedFeatures[activityLabel][eventNum].append(eventFile, sort=False) #Right append
                             else:
-                                combinedFeatures[activityLabel][eventNum] = pd.merge(combinedFeatures[activityLabel][eventNum], eventFile)
+                                if "Right" in dataSourceLabel:
+                                    if isinstance(rightFeatures[activityLabel][eventNum], int):
+                                        rightFeatures[activityLabel][eventNum] = eventFile
+                                    else:
+                                        rightFeatures[activityLabel][eventNum] = pd.merge(rightFeatures[activityLabel][eventNum], eventFile)   #Not anticipated to be used, here just in case 
+                                else:
+                                    if isinstance(leftFeatures[activityLabel][eventNum], int):
+                                        leftFeatures[activityLabel][eventNum] = eventFile
+                                    else:
+                                        leftFeatures[activityLabel][eventNum] = pd.merge(leftFeatures[activityLabel][eventNum], eventFile) 
             
+            #Merge left and right shoes together
+            for activity, event in rightFeatures.items():
+                eventNum = 0
+                for rightFeature in event:
+                    #Give left and right proper defining labels - need to move up the process so we can just add while reading in, but I'm tired and its 4am, so here it is
+                    labelIndex = 0
+                    for label in rightFeature.columns.values.tolist():
+                        rightFeature.columns.values[labelIndex] = "right "+rightFeature.columns.values.tolist()[labelIndex]
+                        labelIndex+=1
+            
+                    labelIndex = 0
+                    for label in leftFeatures[activity][eventNum].columns.values.tolist():
+                        leftFeatures[activity][eventNum].columns.values[labelIndex] = "left "+leftFeatures[activity][eventNum].columns.values.tolist()[labelIndex]
+                        labelIndex+=1
+            
+                    rightFeature = pd.concat([leftFeatures[activity][eventNum], rightFeature], axis=1) #Combine the shoe data horizontally
+                    rightFeatures[activity][eventNum] = rightFeature
+                    eventNum += 1
+
+            #Merge the shoe and phone data together  
+            for activity, event in combinedFeatures.items():
+                eventNum = 0
+                for frameToCombine in event:
+                    #frameToCombine = pd.merge(frameToCombine, rightFeatures[activity][eventNum], how ='outer') #Combine all of the data horizontally
+                    frameToCombine = pd.concat([frameToCombine, rightFeatures[activity][eventNum]], axis=0, ignore_index = True) #Combine all of the data horizontally
+                    combinedFeatures[activity][eventNum] = frameToCombine
+                eventNum += 1
+                                                   
             return combinedFeatures

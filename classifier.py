@@ -103,12 +103,12 @@ def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     print("Setting up enviornment and collecting paths to raw data files\n")
-    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
-    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
+    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     parent_directories = ['Phone', 'Shoe']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
@@ -120,12 +120,12 @@ if __name__ == '__main__':
 
     # -- Synchronizing data
     print("Synchronizing and cleaning raw data... This could take a sec\n")
-    allDataDFs = synchronizeDataFromPaths(paths)
+    #allDataDFs = synchronizeDataFromPaths(paths)
     print("Finished synchronizing/cleaning raw data\n")
     
     # -- Generate features for each chunk of data, saving in .csv files --  
     print("Extraplating and saving features for cleaned data... This will take a sec\n")
-    features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
+    #features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
     print("Finished saving feature files\n")
 
     # -- Plotting features (currently non-functional) --

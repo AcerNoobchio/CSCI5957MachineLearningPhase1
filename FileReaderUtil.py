@@ -93,9 +93,9 @@ class FileReader:
             i = 0
             for line in f:
                 if(i == 0):
-                    labels.append(line)
+                    labels = (line.split(",")[1:])
                 else:
-                    data.append(line)
+                    data.append(line.split(",")[1:])
                 i+=1
             finalData = pd.DataFrame(data, columns = labels)
             return finalData
@@ -117,11 +117,11 @@ class FileReader:
     def ReadFeaturePaths(directory, parent_directories, sub_directories):
         fileNames = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 
                      'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
-        dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         shoeDirectories = ["Left", "Right"]
         phoneDirectories = ["Acc", "Gyro"]
 
         for p_directory in parent_directories:
+            dataFiles = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
             for sub_dir in sub_directories:
                 if "Phone" in p_directory:
                     for phone_dir in phoneDirectories:
