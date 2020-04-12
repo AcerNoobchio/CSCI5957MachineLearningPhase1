@@ -2,6 +2,7 @@ import pandas as pd
 from pandas import read_table 
 import numpy as np
 import datetime as dt
+import math
 from DataUtil import DataUtil as Data
 from FileReaderUtil import FileReader
 from GraphUtil import GraphUtil as Graph
@@ -59,10 +60,15 @@ def synchronizeDataFromPaths(paths):
 
     for activity in activityDFs:
         for event in range(0,len(activityDFs[activity])):
-            allDataDFs['Shoe'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][0])
-            allDataDFs['Shoe'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][1])
-            allDataDFs['Phone'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][2])
-            allDataDFs['Phone'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][3])
+            #Get start and end times
+            start_time = allDataDFs['Shoe'][activity][event][0].iloc[0][0]
+            end_time = allDataDFs['Shoe'][activity][event][0].iloc[-1][0]
+            # in miliseconds, rounding up to accompany all data
+            time_span = math.floor((end_time - start_time)/2000) - 3
+            allDataDFs['Shoe'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][0], time_span)
+            allDataDFs['Shoe'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][1], time_span)
+            allDataDFs['Phone'][activity][event][0] = Synchronization.chunkify_data_frame(activityDFs[activity][event][2], time_span)
+            allDataDFs['Phone'][activity][event][1] = Synchronization.chunkify_data_frame(activityDFs[activity][event][3], time_span)
 
     return allDataDFs
 
@@ -121,12 +127,12 @@ if __name__ == '__main__':
 
     # -- Synchronizing data
     print("Synchronizing and cleaning raw data... This could take a sec\n")
-    #allDataDFs = synchronizeDataFromPaths(paths)
+    allDataDFs = synchronizeDataFromPaths(paths)
     print("Finished synchronizing/cleaning raw data\n")
     
     # -- Generate features for each chunk of data, saving in .csv files --  
     print("Extraplating and saving features for cleaned data... This will take a sec\n")
-    #features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
+    features = Feature.exportDataSetFeatures(allDataDFs, featureDirectory)
     print("Finished saving feature files\n")
 
     # -- Plotting features (currently non-functional) --
@@ -139,6 +145,7 @@ if __name__ == '__main__':
     print("Loading feature Data....\n")
     paths = FileReader.ReadFeaturePaths(featureDirectory, parent_directories, sub_directories)
     features = FileReader.ReadByFileFeatures(paths, 0)
+
     combinedFeatures = Data.combineEventFeatures(features)
     print("Feature Data Sucessfully Loaded\n")
 

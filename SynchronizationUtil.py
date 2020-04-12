@@ -50,15 +50,11 @@ class SynchronizationUtil(object):
 
     #Takes a sorted dataFrame and a second interval and returns a list of smaller dataFrames where each contains data only for the given interval size
     #Example, a dataFrame representing 10 seconds and an interval of 2 returns a list of 5 dataFrames each representing 2 seconds
-    def chunkify_data_frame(dataFrame, miliSecondInterval=2000):
+    def chunkify_data_frame(dataFrame, time_span, miliSecondInterval=2000):
         result = []
         #Get start and end times
         start_time = dataFrame.iloc[0][0]
         end_time = dataFrame.iloc[-1][0]
-        # in seconds, rounding up to accompany all data
-        time_span = math.ceil((end_time - start_time)/1000 / (miliSecondInterval/1000))
-        # Increase end_time by one percent to ensure we get the end of the data
-        end_time = end_time + end_time*.01
         # Initialize our last_time and next_time loop variables to create the chunks
         last_time = start_time
         next_time = start_time + miliSecondInterval
