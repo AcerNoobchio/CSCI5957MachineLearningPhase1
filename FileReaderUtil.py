@@ -156,4 +156,11 @@ class FileReader:
 
         return fileNames
 
+    # Reads in the combined file with all features
+    @staticmethod
+    def ReadAllFeatures(filePath):
+        allCombined = pd.read_csv(filePath)
+
+        return allCombined
+
 
