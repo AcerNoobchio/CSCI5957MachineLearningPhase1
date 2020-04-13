@@ -163,4 +163,23 @@ class FileReader:
 
         return allCombined
 
+    # Saves combinedFeatures by event
+    def SaveCombinedFeaturesByEvent(combinedFeatures, directory):
+        for activity in combinedFeatures:
+            for event in range(0, len(combinedFeatures[activity])):
+                filePath = directory+activity+"Event"+str(event)+".csv"
+                print('Saving Combined Event at Path: ' + filePath)
+                combinedFeatures[activity][event].to_csv(filePath)
+
+    # Saves combinedFeatures by activity
+    def SaveCombinedFeaturesByActivity(combinedActivities, directory):
+        for activity in combinedActivities:
+                filePath = directory+activity+".csv"
+                print('Saving Combined Activity at Path: ' + filePath)
+                combinedActivities[activity][event].to_csv(filePath)
+
+    # Saves final combinedFeatures
+    def SaveCombinedFeaturesFinal(allCombined, directory):
+        filePath = directory+"AllFiles.csv"
+        allCombined.to_csv(filePath)
 
