@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import statistics as stats
 from sklearn import datasets
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -29,21 +30,33 @@ class SVM:
         # creating a confusion matrix 
         cm = confusion_matrix(Y_test, svm_predictions) 
 
-        SVM.printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, cm)
-        return accuracy
+        #SVM.printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, cm)
+        return accuracy*100
 
+    #Finds the accuracy values given a number of classification tests
     @staticmethod
     def testNIterations(dataFrame, CValue, kernelToUse, testValuePercent, nIterations):
         accuracyResults = []
         for test in range(0, nIterations):
-            accuracyResults.append(classify(dataFrame, CValue, kernelToUse, testValuePercent, False))
+            accuracyResults.append(SVM.classify(dataFrame, CValue, kernelToUse, testValuePercent, False))
             
-        return aaccuracyResults
+        return accuracyResults
 
+    #Collects the averages of C values in a range from 1 to the passed number of Cs to test
+    @staticmethod
+    def findCsUpToN(dataFrame, numCs, kernelToUse, testValuePercent, iterationsPerTest):
+        cAverages = []
+        cAverages.append(-1);
+        for cTest in range(1, numCs+1):
+            accuracyResults = SVM.testNIterations(dataFrame, cTest, kernelToUse, testValuePercent, iterationsPerTest)
+            cAverages.append(SVM.findAverage(accuracyResults))
+        return cAverages
+
+    #Finds the average of a passed array
     @staticmethod
     def findAverage(resultArray):
         numResults = len(resultArray)
-        return (float)(_sum(accuracyResults, numResults)/numResults)
+        return (float)(stats._sum(resultArray)[1]/numResults)
 
     @staticmethod
     def printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, confusionMatrix):
