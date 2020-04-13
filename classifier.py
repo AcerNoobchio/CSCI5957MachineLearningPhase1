@@ -8,6 +8,7 @@ from FileReaderUtil import FileReader
 from GraphUtil import GraphUtil as Graph
 from SynchronizationUtil import SynchronizationUtil as Synchronization
 from FeatureUtil import FeatureUtil as Feature
+from SupportVector import SVM
 import os
 try:
     # [OPTIONAL] Seaborn makes plots nicer
@@ -172,6 +173,7 @@ if __name__ == '__main__':
     filePath = combinedFeatureDirectory+"AllFiles"+".csv"
     allCombined.to_csv(filePath)
 
+    SVM.classify(allCombined, 1, 'linear', 20)
     # -- Ranking features --
     #print("Ranking features by data type\n")
     #rankedFeatures = getFeatureRankings(features)

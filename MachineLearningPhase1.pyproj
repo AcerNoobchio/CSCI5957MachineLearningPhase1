@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SupportVector.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SynchronizationUtil.py">
       <SubType>Code</SubType>
     </Compile>
