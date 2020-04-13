@@ -3,6 +3,9 @@ from pandas import read_table
 import numpy as np
 import datetime as dt
 import math
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.linear_model import LogisticRegression
 from DataUtil import DataUtil as Data
 from FileReaderUtil import FileReader
 from GraphUtil import GraphUtil as Graph
@@ -111,14 +114,14 @@ def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
 if __name__ == '__main__':
     # Set up enviornemnt constants and read in file paths
     print("Setting up enviornment and collecting paths to raw data files\n")
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    #combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
-    combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
+    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
+    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    #combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
     sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
     parent_directories = ['Phone', 'Shoe']
     paths = FileReader.ReadFilePaths(directory, sub_directories)
@@ -171,18 +174,22 @@ if __name__ == '__main__':
     allCombined = Data.combineActivities(combinedActivities)
 
     filePath = combinedFeatureDirectory+"AllFiles"+".csv"
-    allCombined.to_csv(filePath)
+    #allCombined.to_csv(filePath)
 
-    #SVM.classify(allCombined, 1, 'linear', 20)
-    iterationsPerTest = 3
-    percentTest = 20
-    svmModel = 'linear'
+    #SVM.classify(allCombined, 1, 'linear', 20, True)
 
-    descriptor = "its"+str(iterationsPerTest)+"pctTest"+str(percentTest)+svmModel
 
-    cRanks = SVM.findCsUpToN(allCombined, 3, 'linear', 20, 3)
-    grapher = Graph()
-    grapher.plotArray(cRanks, 100.0, 1, "C-Value", "Accuracy", "C-Ranking",descriptor, outputDirectory)
+    y = allCombined['Activity']
+    X = allCombined.drop(columns=['Activity'])
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
+
+    logreg = LogisticRegression()
+    logreg.fit(X_train, y_train)
+
+    y_pred=logreg.predict(X_test)
+    print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+    print("Precision:",metrics.precision_score(y_test, y_pred, average='micro'))
+    print("Recall:",metrics.recall_score(y_test, y_pred, average='micro'))
     # -- Ranking features --
     #print("Ranking features by data type\n")
     #rankedFeatures = getFeatureRankings(features)
