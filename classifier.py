@@ -147,15 +147,19 @@ if __name__ == '__main__':
     #data = Data.rescale2D(data)
     #grapher.plotFeature(data, 500, labels[col], "by Feature", outputDirectory, col) #Works finally - looks awful, will need to pass in selected files
 
+    # -- Ranking features --
+    #print("Ranking features by data type\n")
+    #rankedFeatures = getFeatureRankings(features)
+    #plotRankedFeaturesByType(rankedFeatures, featureDirectory, 10)
+    #print("Finished ranking features\n")
+
     # -- Reading Features -- 
-    print("Loading feature Data....\n")
-    paths = FileReader.ReadFeaturePaths(featureDirectory, parent_directories, sub_directories)
-    features = FileReader.ReadByFileFeatures(paths, 0)
+    #print("Loading feature Data....\n")
+    #paths = FileReader.ReadFeaturePaths(featureDirectory, parent_directories, sub_directories)
+    #features = FileReader.ReadByFileFeatures(paths, 0)
 
-    combinedFeatures = Data.combineEventFeatures(features)
-    print("Feature Data Sucessfully Loaded\n")
-
-
+    #combinedFeatures = Data.combineEventFeatures(features)
+    #print("Feature Data Sucessfully Loaded\n")
 
     #for activity in combinedFeatures:
     #    for event in range(0, len(combinedFeatures[activity])):
@@ -164,34 +168,34 @@ if __name__ == '__main__':
     #        combinedFeatures[activity][event].to_csv(filePath)
 
 
-    combinedActivities = Data.combineActivityFeatures(combinedFeatures)
+    #combinedActivities = Data.combineActivityFeatures(combinedFeatures)
 
     #for activity in combinedActivities:
     #    filePath = combinedFeatureDirectory+activity+".csv"
     #    print('Saving Combined Event at Path: ' + filePath)
     #    combinedActivities[activity].to_csv(filePath)
 
-    allCombined = Data.combineActivities(combinedActivities)
+    #allCombined = Data.combineActivities(combinedActivities)
 
     filePath = combinedFeatureDirectory+"AllFiles"+".csv"
     #allCombined.to_csv(filePath)
 
+    # Load combined feature data to train models
+    allCombined = pd.read_csv(filePath)
+
     #SVM.classify(allCombined, 1, 'linear', 20, True)
 
-
+    # Split dataset
     y = allCombined['Activity']
     X = allCombined.drop(columns=['Activity'])
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
 
+    # Create and train the logistic model
     logreg = LogisticRegression()
     logreg.fit(X_train, y_train)
 
+    # Make predictions and print accuracy measures
     y_pred=logreg.predict(X_test)
     print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
     print("Precision:",metrics.precision_score(y_test, y_pred, average='micro'))
     print("Recall:",metrics.recall_score(y_test, y_pred, average='micro'))
-    # -- Ranking features --
-    #print("Ranking features by data type\n")
-    #rankedFeatures = getFeatureRankings(features)
-    #plotRankedFeaturesByType(rankedFeatures, featureDirectory, 10)
-    #print("Finished ranking features\n")
