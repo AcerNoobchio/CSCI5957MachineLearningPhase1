@@ -173,7 +173,16 @@ if __name__ == '__main__':
     filePath = combinedFeatureDirectory+"AllFiles"+".csv"
     allCombined.to_csv(filePath)
 
-    SVM.classify(allCombined, 1, 'linear', 20)
+    #SVM.classify(allCombined, 1, 'linear', 20)
+    iterationsPerTest = 3
+    percentTest = 20
+    svmModel = 'linear'
+
+    descriptor = "its"+str(iterationsPerTest)+"pctTest"+str(percentTest)+svmModel
+
+    cRanks = SVM.findCsUpToN(allCombined, 3, 'linear', 20, 3)
+    grapher = Graph()
+    grapher.plotArray(cRanks, 100.0, 1, "C-Value", "Accuracy", "C-Ranking",descriptor, outputDirectory)
     # -- Ranking features --
     #print("Ranking features by data type\n")
     #rankedFeatures = getFeatureRankings(features)
