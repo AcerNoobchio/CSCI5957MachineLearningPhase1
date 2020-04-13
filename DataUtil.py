@@ -213,4 +213,13 @@ class DataUtil:
             activityNum += 1
         combinedFeatures.insert(0, "Activity", activityNames)
         return combinedFeatures
+
+    # Wrapper to combine all features
+    @staticmethod
+    def combineAllFeatures(features, combinedFeatureDirectory):
+        combinedFeatures = self.combineEventFeatures(features)
+        combinedActivities = self.combineActivityFeatures(combinedFeatures)
+        allCombined = self.combineActivities(combinedActivities)
+
+        return allCombined
             
