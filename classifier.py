@@ -1,18 +1,10 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn import metrics
-from sklearn.linear_model import LogisticRegression
 from ClassifierUtil import ClassifierUtil
 from FeatureUtil import FeatureUtil as Feature
 from FileReaderUtil import FileReader
 from SupportVector import SVM
+from LogisticRegression import LogReg
 import os
-try:
-    # [OPTIONAL] Seaborn makes plots nicer
-    import seaborn
-except ImportError:
-    pass
 
 if __name__ == '__main__':
     # -- Create Instance of helper class --
@@ -55,7 +47,6 @@ if __name__ == '__main__':
     # -- Ranking features --
     #print("Ranking features by data type\n")
     #rankedFeatures = classifierUtil.getFeatureRankings(features)
-    #classifierUtil.plotRankedFeaturesByType(rankedFeatures, featureDirectory, 10)
     #print("Finished ranking features\n")
 
     # -- Reading Features -- 
@@ -70,24 +61,11 @@ if __name__ == '__main__':
 
     # -- Load combined feature data to train models --
     print("Loading combined feature data... \n")
-    allCombined = pd.read_csv(filePath)
+    allCombined = pd.read_csv(combinedFeatureDirectory+"AllFiles.csv")
     print("Combine Feature data loaded\n")
 
     # -- Train and classify with SVM --
-    #SVM.classify(allCombined, 1, 'linear', 20, True)
+    SVM.classify(allCombined, 1, 'linear', 20, True)
 
     # -- Train and classify with SVM --
-    # Split dataset
-    y = allCombined['Activity']
-    X = allCombined.drop(columns=['Activity'])
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
-
-    # Create and train the logistic model
-    logreg = LogisticRegression()
-    logreg.fit(X_train, y_train)
-
-    # Make predictions and print accuracy measures
-    y_pred=logreg.predict(X_test)
-    print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-    print("Precision:",metrics.precision_score(y_test, y_pred, average='micro'))
-    print("Recall:",metrics.recall_score(y_test, y_pred, average='micro'))
+    LogReg.classify(allCombined)

@@ -13,8 +13,9 @@ from FeatureUtil import FeatureUtil as Feature
 class ClassifierUtil(object):
     """Util class containing wrappers for the driver"""
 
+
     #Wrapper function that takes file paths, the data read rate and builds raw data plots, saving them in the provided outputDirectory
-    def graphRawData(paths, rate, outputDirectory):
+    def graphRawData(self, paths, rate, outputDirectory):
         colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8)}
         grapher = Graph()
 
@@ -25,7 +26,7 @@ class ClassifierUtil(object):
 
         #Wrapper function that takes paths of raw data and returns a dictionary of activities containing lists of events containing a list of dataframes
         #each dataframe represents a two second chunk from the event. Trimming and combining also occur in this proccess
-    def synchronizeDataFromPaths(paths):
+    def synchronizeDataFromPaths(self, paths):
         allDataDFs = {'Shoe': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}, 'Phone': {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}}
         activityDFs = {'Cycling': [], 'Driving': [], 'Running': [], 'Sitting': [], 'StairDown': [], 'StairUp': [], 'Standing': []}
         colsPerDataType = {'Shoe': (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 'Phone': (1, 4, 6, 8)}
@@ -71,7 +72,7 @@ class ClassifierUtil(object):
 
         return allDataDFs
 
-    def getFeatureRankings(activityFeatures):
+    def getFeatureRankings(self, activityFeatures):
         rankedFeatures = {"Left": [], "Right": [], "Acc": [], "Gyro": []}
         leftShoeData = []
         rightShoeData = []
@@ -100,27 +101,27 @@ class ClassifierUtil(object):
         return rankedFeatures
 
     #This doesn't work, need to convert properly from list to dataframe
-    def plotRankedFeaturesByType(rankedFeatures, outputDirectory, numFeatures):
+    def plotRankedFeaturesByType(self, rankedFeatures, outputDirectory, numFeatures):
         for key in rankedFeatures:
             df = pd.DataFrame(rankedFeatures[key])
             #Graph.plotRankedFeatures(df.head(numFeatures), (key+"RankedFeaturesGraph"), outputDirectory)
 
     # Combines and saves all features
-    def combineAndSaveAllFeatures(features, combinedFeatureDirectory):
-        allCombined = Data.combineAllFeatures(features)
+    def combineAndSaveAllFeatures(self, features, combinedFeatureDirectory):
+        allCombined = Data.combineAllFeatures(features, combinedFeatureDirectory)
         FileReader.SaveCombinedFeaturesFinal(allCombined, combinedFeatureDirectory)
 
         return allCombined
 
     # Gets all raw data file paths
-    def getRawDataFilePaths(directory):
+    def getRawDataFilePaths(self, directory):
         sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
         paths = FileReader.ReadFilePaths(directory, sub_directories)
 
         return paths
 
     # Reads in all features by datatype, activity and event
-    def readAllFeaturesFromPaths(featureDirectory):
+    def readAllFeaturesFromPaths(self, featureDirectory):
         sub_directories = ['Cycling', 'Driving', 'Running', 'Sitting', 'StairDown', 'StairUp', 'Standing']
         parent_directories = ['Phone', 'Shoe']
 
@@ -130,7 +131,7 @@ class ClassifierUtil(object):
         return features
 
     # Plots features
-    def plotFeatureData(paths, outputDirectory):
+    def plotFeatureData(self, paths, outputDirectory):
         grapher = Graph()
         col = 2
         data = FileReader.ReadByFileRate(paths,1,(0, 2), 40)

@@ -217,9 +217,9 @@ class DataUtil:
     # Wrapper to combine all features
     @staticmethod
     def combineAllFeatures(features, combinedFeatureDirectory):
-        combinedFeatures = self.combineEventFeatures(features)
-        combinedActivities = self.combineActivityFeatures(combinedFeatures)
-        allCombined = self.combineActivities(combinedActivities)
+        combinedFeatures = DataUtil.combineEventFeatures(features)
+        combinedActivities = DataUtil.combineActivityFeatures(combinedFeatures)
+        allCombined = DataUtil.combineActivities(combinedActivities)
 
         return allCombined
             
