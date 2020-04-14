@@ -46,7 +46,7 @@ class LogReg(object):
             X = X,
             y = y, train_sizes = train_sizes, cv = 5,
             scoring = 'neg_mean_squared_error',
-            shuffle=True)
+            shuffle=True,)
 
         train_scores_mean = -train_scores.mean(axis = 1)
         validation_scores_mean = -validation_scores.mean(axis = 1)
@@ -89,8 +89,13 @@ class LogReg(object):
 
     @staticmethod
     def printStats(y_test, y_pred):
+
+        report_lr = metrics.precision_recall_fscore_support(y_test, y_pred, average='micro')
+        print ("\nprecision = %0.2f, recall = %0.2f, F1 = %0.2f, accuracy = %0.2f\n" % \
+           (report_lr[0], report_lr[1], report_lr[2], metrics.accuracy_score(y_test, y_pred)))
+
         print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-        print("Precision:",metrics.precision_score(y_test, y_pred, average='micro'))
-        print("Recall:",metrics.recall_score(y_test, y_pred, average='micro'))
+        print("Precision:",metrics.precision_score(y_test, y_pred, average='weighted'))
+        print("Recall:",metrics.recall_score(y_test, y_pred, average='weighted'))
 
 
