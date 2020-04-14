@@ -2,8 +2,12 @@ import numpy as np
 import pandas as pd
 import statistics as stats
 from sklearn import datasets
+import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import learning_curve
+
+from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 class SVM:
     
@@ -68,3 +72,37 @@ class SVM:
         print("\n    is: "+str(accuracy))
         print("\n\n The confusion matrix is as follows: ")
         print(confusionMatrix)
+
+    @staticmethod
+    def getLearningCurve(dataFrame):
+        le = LabelEncoder()
+        le.fit(dataFrame['Activity'].astype(str))
+
+        y = le.transform(dataFrame['Activity'].astype(str))
+        X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
+        train_sizes = [1, 100, 250, 500, 750, 1000, 1250]
+
+        train_sizes, train_scores, validation_scores = learning_curve(
+            SVC(kernel='linear'),
+            X = X,
+            y = y, train_sizes = train_sizes, cv = 5,
+            scoring = 'neg_mean_squared_error',
+            shuffle=True,)
+
+        train_scores_mean = -train_scores.mean(axis = 1)
+        validation_scores_mean = -validation_scores.mean(axis = 1)
+
+        print('Mean training scores\n\n', pd.Series(train_scores_mean, index = train_sizes))
+        print('\n', '-' * 20) # separator
+        print('\nMean validation scores\n\n',pd.Series(validation_scores_mean, index = train_sizes))
+        
+        plt.style.use('seaborn')
+        plt.plot(train_sizes, train_scores_mean, label = 'Training error')
+        plt.plot(train_sizes, validation_scores_mean, label = 'Validation error')
+        plt.ylabel('MSE', fontsize = 14)
+        plt.xlabel('Training set size', fontsize = 14)
+        plt.title('Learning curves for a SVM model', fontsize = 18, y = 1.03)
+        plt.legend()
+        plt.ylim(0,3)
+
+        plt.show()
