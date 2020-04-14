@@ -68,4 +68,4 @@ if __name__ == '__main__':
     SVM.classify(allCombined, 1, 'linear', 20, True)
 
     # -- Train and classify with SVM --
-    LogReg.classify(allCombined)
+    LogReg.getLearningCurve(allCombined)
