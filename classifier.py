@@ -76,4 +76,4 @@ if __name__ == '__main__':
     grapher.plotArray(cRanks, 100, 1, "C-Value","Accuracy", "cRanking", "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest), outputDirectory)
 
     # -- Train and classify with SVM --
-    LogReg.classify(allCombined)
+    LogReg.getLearningCurve(allCombined)
