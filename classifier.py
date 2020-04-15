@@ -69,11 +69,19 @@ if __name__ == '__main__':
     numCs = 50
     kernelToUse = 'rbf' #gaussian
     testValuePercent = 20
-    iterationsPerTest = 100
+    iterationsPerTest = 1
+    chosenC = 11
+    graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
+    lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
 
     #This takes awhile - feel free to comment it out if I forget when I push
     cRanks = SVM.findCsUpToN(allCombined, numCs, kernelToUse, testValuePercent, iterationsPerTest)
-    grapher.plotArray(cRanks, 100, 1, "C-Value","Accuracy", "cRanking", "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest), outputDirectory)
+    bestAccuracy = max(cRanks[1:])
+    worstAccuracy = min(cRanks[1:])
+    print("C Value with best Accuracy: ",cRanks.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
+    print("C Value with worst Accuracy: ",cRanks.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
 
+    grapher.plotArray(cRanks, 100, 1, "C-Value","Accuracy", "cRanking", graphName, outputDirectory)
+    SVM.getLearningCurve(allCombined, chosenC, kernelToUse, lcGraphName, outputDirectory)
     # -- Train and classify with SVM --
-    LogReg.getLearningCurve(allCombined)
+    #LogReg.getLearningCurve(allCombined)
