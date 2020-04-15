@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import learning_curve
-
+from sklearn.model_selection import validation_curve
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 class SVM:
@@ -74,6 +74,41 @@ class SVM:
         print(confusionMatrix)
 
     @staticmethod
+    def getValidationCurve(dataFrame):
+        le = LabelEncoder()
+        le.fit(dataFrame['Activity'].astype(str))
+
+        y = le.transform(dataFrame['Activity'].astype(str))
+        X = dataFrame.iloc[:, 2:102]
+
+        param_range = np.logspace(-6, -1, 5)
+        train_scores, test_scores = validation_curve(
+            SVC(), X, y, param_name="gamma", param_range=param_range,
+            scoring="accuracy", n_jobs=1)
+        train_scores_mean = np.mean(train_scores, axis=1)
+        train_scores_std = np.std(train_scores, axis=1)
+        test_scores_mean = np.mean(test_scores, axis=1)
+        test_scores_std = np.std(test_scores, axis=1)
+
+        plt.title("Validation Curve with SVM")
+        plt.xlabel(r"$\gamma$")
+        plt.ylabel("Score")
+        plt.ylim(0.0, 1.1)
+        lw = 2
+        plt.semilogx(param_range, train_scores_mean, label="Training score",
+                     color="darkorange", lw=lw)
+        plt.fill_between(param_range, train_scores_mean - train_scores_std,
+                         train_scores_mean + train_scores_std, alpha=0.2,
+                         color="darkorange", lw=lw)
+        plt.semilogx(param_range, test_scores_mean, label="Cross-validation score",
+                     color="navy", lw=lw)
+        plt.fill_between(param_range, test_scores_mean - test_scores_std,
+                         test_scores_mean + test_scores_std, alpha=0.2,
+                         color="navy", lw=lw)
+        plt.legend(loc="best")
+        plt.show()
+
+    @staticmethod
     def getLearningCurve(dataFrame):
         le = LabelEncoder()
         le.fit(dataFrame['Activity'].astype(str))
@@ -82,12 +117,9 @@ class SVM:
         X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
         train_sizes = [1, 100, 250, 500, 750, 1000, 1250]
 
-        train_sizes, train_scores, validation_scores = learning_curve(
-            SVC(kernel='linear'),
-            X = X,
-            y = y, train_sizes = train_sizes, cv = 5,
-            scoring = 'neg_mean_squared_error',
-            shuffle=True,)
+        train_scores, valid_scores = validation_curve(Ridge(), X, y, "alpha",
+                                              np.logspace(-7, 3, 3),
+                                              cv=5)
 
         train_scores_mean = -train_scores.mean(axis = 1)
         validation_scores_mean = -validation_scores.mean(axis = 1)
