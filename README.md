@@ -40,7 +40,7 @@ The features are generated in the following scheme:
         
 The methods are relatively robust, so the program can handle different structures of data being passed in with the caveat that the FeatureUtil method that best reflects the point in the data being passed in must be used. 
 
-Broadly speaking, the workflow is something like this:
+Broadly speaking, the workflow for preprocessing the data is something like this:
   - Read in the data
     - Use ReadFilePaths or ReadByFileRate in FileReaderUtil
   - Synchronize the data
@@ -53,15 +53,34 @@ Broadly speaking, the workflow is something like this:
   - Analyze Features
     - Use rankFeatures in FeatureUtil
   - Graph the Feature Analysis (optional)
+  
+### Classifying Data:
+
+Currently two machine learning algorithms have been implemented and are capable of providing predictions. These two models include:
+- SVM
+- Logistic Regression
+
+In order to use the models, create an instance of the class within classifier.py. A variety of options such as test_split ratio, regularization rate and more can be selected to customize performance. Class methods for each model implementation also include support for printing a variety of metrics and performance graphs.
+
+Exampe usage of SVM (params: dataFrame, CValue, kernelToUse, testSizePercent, isFixed):
+
+**SVM.classify(allCombined, 1, 'linear', 20, True)**
+
+Example usage of LogReg(params: dataFrame, testSizePercent, regularizationRate):
+
+**LogReg.classify(allCombined, .2, .01)**
 
 ### Overview of the Python Files:
 
-- Classifier: The Driver class that contains main and some static methods for building the organizational data structure that will allow one to iterate over all of the data files in the project. 
-- DataUtil: A static class that contains the methods to clean the data, convert between data types, and scale columns in the data.
+- Classifier: The Driver class that contains main and some static methods for building the organizational data structure that will allow one to iterate over all of the data files in the project
+- Classifier Util: Contains the wrapper functions to do the data cleaning 
+- DataUtil: A static class that contains the methods to clean the data, convert between data types, and scale columns in the data
 - FeatureUtil: A static class that contains the methods for generating the features and analyzing them
-- FileReaderUtil: A static class that contains methods to read in the filepaths of a given directory and read in an individual file.
+- FileReaderUtil: A static class that contains methods to read in the filepaths of a given directory and read in an individual file
 - GraphUtil: An instance class that contains the methods used to create different graphs of the read-in data
+- LogisiticRegression: A static class that contains methods for testing and creating a logistic regression model
 - StringUtil: A static class that contains some additional string methods 
+- SupportVector: A static class that conatins methods for creating and testing a Support Vector Machine classification model
 - SynchronizationUtil: A static class that contains the methods for breaking the data into chunks and synchronizing the data according to the first column (Time).
 
 ## License
