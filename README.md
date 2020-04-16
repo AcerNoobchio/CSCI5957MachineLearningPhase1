@@ -63,10 +63,12 @@ Currently two machine learning algorithms have been implemented and are capable 
 In order to use the models, create an instance of the class within classifier.py. A variety of options such as test_split ratio, regularization rate and more can be selected to customize performance. Class methods for each model implementation also include support for printing a variety of metrics and performance graphs.
 
 Exampe usage of SVM (params: dataFrame, CValue, kernelToUse, testSizePercent, isFixed):
-SVM.classify(allCombined, 1, 'linear', 20, True)
+
+**SVM.classify(allCombined, 1, 'linear', 20, True)**
 
 Example usage of LogReg(params: dataFrame, testSizePercent, regularizationRate):
-LogReg.classify(allCombined, .2, .01)
+
+**LogReg.classify(allCombined, .2, .01)**
 
 ### Overview of the Python Files:
 
