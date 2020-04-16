@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import statistics as stats
 from sklearn import datasets
+from sklearn import metrics
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -14,45 +15,64 @@ class SVM:
     #Generates a classification based on user input
     #dataFrame:pandas.DataFrame - combined dataframe with all activities on one frame
     #CValue:int - the value of C for the kernel to use in classification to control boundary tightness
-    #kernelToUse:string - a designation for the kernel for the model to use... one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+    #kernelToUse:string - a designation for the kernel for the model to use... one of ‘linear’, ‘poly’, ‘rbf’ - Guassian, ‘sigmoid’, ‘precomputed’ - requires additional args
     #testValuePercent:int/float - the percentage of the data that should be devoted to the test set 
     #isFixed:bool - whether or not to use a random value in the test
+    #printResults:bool - whether or not to print statistics for each run
     @staticmethod
-    def classify(dataFrame, CValue, kernelToUse, testValuePercent, isFixed):
-        X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
-        Y = dataFrame['Activity']
-        if(isFixed):
-            X_train, X_test, Y_train, Y_test = train_test_split(X, Y, shuffle = True, random_state = 42, test_size = float(testValuePercent/100))
-        else:
-            X_train, X_test, Y_train, Y_test = train_test_split(X, Y, shuffle = True, test_size = float(testValuePercent/100))
-        svm_model_linear = SVC(kernel = kernelToUse, C = CValue).fit(X_train, Y_train) 
+    def classify(dataFrame, CValue, sValue, kernelToUse, testValuePercent, isFixed, printResults):
+        
+        #gammaVal = sValue/dataFrame.shape[1]
+        X_train, X_test, Y_train, Y_test = SVM.splitTestData(dataFrame, testValuePercent, isFixed)   #Split the data
+
+        svm_model_linear = SVC(kernel = kernelToUse, C = CValue).fit(X_train, Y_train)      #Generate model
         svm_predictions = svm_model_linear.predict(X_test)
 
         # model accuracy for X_test   
         accuracy = svm_model_linear.score(X_test, Y_test) 
 
-        # creating a confusion matrix 
-        cm = confusion_matrix(Y_test, svm_predictions) 
+        if(printResults):
+            SVM.printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, Y_test, svm_predictions)
 
-        #SVM.printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, cm)
         return accuracy*100
+
+    @staticmethod
+    def splitTestData(dataFrame, testValuePercent, isFixed):
+        X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
+        Y = dataFrame['Activity']
+        if(isFixed):    #Use the same seed when generating test and training sets
+            X_train, X_test, Y_train, Y_test = train_test_split(X, Y, shuffle = True, random_state = 42, test_size = float(testValuePercent/100))
+        else:           #Use a completely random set of test and training data
+            X_train, X_test, Y_train, Y_test = train_test_split(X, Y, shuffle = True, test_size = float(testValuePercent/100))
+
+        return X_train, X_test, Y_train, Y_test
 
     #Finds the accuracy values given a number of classification tests
     @staticmethod
-    def testNIterations(dataFrame, CValue, kernelToUse, testValuePercent, nIterations):
+    def testNIterations(dataFrame, CValue, sValue, kernelToUse, testValuePercent, nIterations):
         accuracyResults = []
         for test in range(0, nIterations):
-            accuracyResults.append(SVM.classify(dataFrame, CValue, kernelToUse, testValuePercent, False))
+            accuracyResults.append(SVM.classify(dataFrame, CValue, sValue, kernelToUse, testValuePercent, False, False))
             
         return accuracyResults
 
     #Collects the averages of C values in a range from 1 to the passed number of Cs to test
     @staticmethod
-    def findCsUpToN(dataFrame, numCs, kernelToUse, testValuePercent, iterationsPerTest):
+    def findCsUpToN(dataFrame, numCs, sToUse, kernelToUse, testValuePercent, iterationsPerTest):
         cAverages = []
         cAverages.append(-1);
         for cTest in range(1, numCs+1):
-            accuracyResults = SVM.testNIterations(dataFrame, cTest, kernelToUse, testValuePercent, iterationsPerTest)
+            accuracyResults = SVM.testNIterations(dataFrame, cTest, sToUse, kernelToUse, testValuePercent, iterationsPerTest)
+            cAverages.append(SVM.findAverage(accuracyResults))
+        return cAverages
+
+    #Collects the averages of S values in a range from 1 to the passed number of Ss to test
+    @staticmethod
+    def findSsUpToN(dataFrame, cToUse, numSs, kernelToUse, testValuePercent, iterationsPerTest):
+        cAverages = []
+        cAverages.append(-1);
+        for sTest in range(1, numSs+1):
+            accuracyResults = SVM.testNIterations(dataFrame, cToUse, numSs, kernelToUse, testValuePercent, iterationsPerTest)
             cAverages.append(SVM.findAverage(accuracyResults))
         return cAverages
 
@@ -63,27 +83,39 @@ class SVM:
         return (float)(stats._sum(resultArray)[1]/numResults)
 
     @staticmethod
-    def printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, confusionMatrix):
-        print("    The accuracy for SVM with settings: ")
+    def printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, Y_test, svm_predictions):
+        print("    The results for for SVM with settings: ")
         print("\n    Kernel: "+kernelToUse)
         print("\n    C - Value: "+str(CValue))
         print("\n    Fixed seed: "+str(isFixed))
         print("\n    Test Set Percentage: "+str(testValuePercent))
-        print("\n    is: "+str(accuracy))
-        print("\n\n The confusion matrix is as follows: ")
-        print(confusionMatrix)
+        print("\n    are as follows: ")
+        print("\n    Accuracy: "+str(accuracy))
+        #print("\n    Precision: ",metrics.precision_score(Y_test, svm_predictions, average='micro'))
+        #print("\n    Recall: ",metrics.recall_score(Y_test, svm_predictions, average='micro'))
+
+        report_lr = metrics.precision_recall_fscore_support(Y_test, svm_predictions, average='micro')
+        print ("\n     precision = %0.2f, recall = %0.2f, F1 = %0.2f, accuracy = %0.2f\n" % \
+           (report_lr[0], report_lr[1], report_lr[2], metrics.accuracy_score(Y_test, svm_predictions)))
+
+        print("\n    Accuracy: ",metrics.accuracy_score(Y_test, svm_predictions))
+        print("\n    Precision: ",metrics.precision_score(Y_test, svm_predictions, average='weighted'))
+
+        print("\n    Recall:",metrics.recall_score(Y_test, svm_predictions, average='weighted'))
+        print("\n\n  Confusion Matrix: ")
+        print(confusion_matrix(Y_test, svm_predictions))
 
     @staticmethod
-    def getValidationCurve(dataFrame):
+    def getValidationCurve(dataFrame, cVal, kernelToUse, directory, filename):
         le = LabelEncoder()
         le.fit(dataFrame['Activity'].astype(str))
 
         y = le.transform(dataFrame['Activity'].astype(str))
-        X = dataFrame.iloc[:, 2:102]
+        X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
 
         param_range = np.logspace(-6, -1, 5)
         train_scores, test_scores = validation_curve(
-            SVC(), X, y, param_name="gamma", param_range=param_range,
+            SVC(cVal, kernelToUse), X, y, param_name="gamma", param_range=param_range,
             scoring="accuracy", n_jobs=1)
         train_scores_mean = np.mean(train_scores, axis=1)
         train_scores_std = np.std(train_scores, axis=1)
@@ -106,10 +138,10 @@ class SVM:
                          test_scores_mean + test_scores_std, alpha=0.2,
                          color="navy", lw=lw)
         plt.legend(loc="best")
-        plt.show()
+        plt.savefig(directory+filename)
 
     @staticmethod
-    def getLearningCurve(dataFrame):
+    def getLearningCurve(dataFrame, cVal, kernelToUse, directory, filename):
         le = LabelEncoder()
         le.fit(dataFrame['Activity'].astype(str))
 
@@ -117,9 +149,10 @@ class SVM:
         X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
         train_sizes = [1, 100, 250, 500, 750, 1000, 1250]
 
-        train_scores, valid_scores = validation_curve(Ridge(), X, y, "alpha",
-                                              np.logspace(-7, 3, 3),
-                                              cv=5)
+        train_sizes, train_scores, validation_scores = learning_curve(
+            SVC(cVal, kernelToUse), X, y, train_sizes = train_sizes, cv=5,	
+            scoring = 'neg_mean_squared_error',	
+            shuffle=True,)
 
         train_scores_mean = -train_scores.mean(axis = 1)
         validation_scores_mean = -validation_scores.mean(axis = 1)
@@ -137,4 +170,4 @@ class SVM:
         plt.legend()
         plt.ylim(0,3)
 
-        plt.show()
+        plt.savefig(directory+filename)

@@ -67,21 +67,37 @@ if __name__ == '__main__':
 
     # -- Train and classify with SVM --
     numCs = 50
+    numSs = 50
     kernelToUse = 'rbf' #gaussian
     testValuePercent = 20
-    iterationsPerTest = 1
-    chosenC = 11
+    iterationsPerTest = 20
+    chosenC = 9
+    chosenS = 1
     graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
     lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
 
     #This takes awhile - feel free to comment it out if I forget when I push
-    cRanks = SVM.findCsUpToN(allCombined, numCs, kernelToUse, testValuePercent, iterationsPerTest)
-    bestAccuracy = max(cRanks[1:])
-    worstAccuracy = min(cRanks[1:])
-    print("C Value with best Accuracy: ",cRanks.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
-    print("C Value with worst Accuracy: ",cRanks.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
 
-    grapher.plotArray(cRanks, 100, 1, "C-Value","Accuracy", "cRanking", graphName, outputDirectory)
-    SVM.getLearningCurve(allCombined, chosenC, kernelToUse, lcGraphName, outputDirectory)
+    #---- Testing C-Value ------
+    #SVM.classify(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, True, True)
+    average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 1000)
+    print("Average: ", SVM.findAverage(average))
+    #cRanks = SVM.findCsUpToN(allCombined, numCs, chosenS,kernelToUse, testValuePercent, iterationsPerTest)
+    #bestAccuracy = max(cRanks[1:])
+    #worstAccuracy = min(cRanks[1:])
+    #print("C Value with best Accuracy: ",cRanks.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
+    #print("C Value with worst Accuracy: ",cRanks.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
+    #grapher.plotArray(cRanks, 100, 1, "C-Value","Accuracy", "sRanking", graphName, outputDirectory)
+
+    #---- Testing sigma2rd Value ------
+    #sRanks = SVM.findSsUpToN(allCombined, chosenC, numSs,kernelToUse, testValuePercent, iterationsPerTest)
+    #bestAccuracy = max(sRanks[1:])
+    #worstAccuracy = min(sRanks[1:])
+    #print("S Value with best Accuracy: ",sRanks.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
+    #print("S Value with worst Accuracy: ",sRanks.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
+
+    #grapher.plotArray(sRanks, 100, 1, "S-Value","Accuracy", "sRanking", graphName, outputDirectory)
+    #SVM.getLearningCurve(allCombined, chosenC, kernelToUse, outputDirectory, lcGraphName)
+    #SVM.getValidationCurve(allCombined, chosenC, kernelToUse, outputDirectory, lcGraphName)
     # -- Train and classify with SVM --
     #LogReg.getLearningCurve(allCombined)
