@@ -76,11 +76,9 @@ if __name__ == '__main__':
     graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
     lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
 
-    #This takes awhile - feel free to comment it out if I forget when I push
-
     #---- Testing C-Value ------
     #SVM.classify(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, True, True)
-    average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 1000)
+    average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 5)
     print("Average: ", SVM.findAverage(average))
     #cRanks = SVM.findCsUpToN(allCombined, numCs, chosenS,kernelToUse, testValuePercent, iterationsPerTest)
     #bestAccuracy = max(cRanks[1:])
