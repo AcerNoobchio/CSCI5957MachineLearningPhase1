@@ -28,6 +28,9 @@
     <Compile Include="LogisticRegression.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NeuralNetwork.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SupportVector.py">
       <SubType>Code</SubType>
     </Compile>

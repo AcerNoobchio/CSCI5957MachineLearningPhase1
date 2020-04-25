@@ -4,6 +4,7 @@ from FeatureUtil import FeatureUtil as Feature
 from FileReaderUtil import FileReader
 from SupportVector import SVM
 from LogisticRegression import LogReg
+from NeuralNetwork import NeuralNetwork as NN
 from GraphUtil import GraphUtil as Graph
 import os
 
@@ -66,20 +67,20 @@ if __name__ == '__main__':
     print("Combine Feature data loaded\n")
 
     # -- Train and classify with SVM --
-    numCs = 50
-    numSs = 50
-    kernelToUse = 'rbf' #gaussian
-    testValuePercent = 20
-    iterationsPerTest = 20
-    chosenC = 9
-    chosenS = 1
-    graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
-    lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
+    #numCs = 50
+    #numSs = 50
+    #kernelToUse = 'rbf' #gaussian
+    #testValuePercent = 20
+    #iterationsPerTest = 20
+    #chosenC = 9
+    #chosenS = 1
+    #graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
+    #lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
 
     #---- Testing C-Value ------
     #SVM.classify(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, True, True)
-    average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 5)
-    print("Average: ", SVM.findAverage(average))
+    #average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 5)
+    #print("Average: ", SVM.findAverage(average))
     #cRanks = SVM.findCsUpToN(allCombined, numCs, chosenS,kernelToUse, testValuePercent, iterationsPerTest)
     #bestAccuracy = max(cRanks[1:])
     #worstAccuracy = min(cRanks[1:])
@@ -99,3 +100,12 @@ if __name__ == '__main__':
     #SVM.getValidationCurve(allCombined, chosenC, kernelToUse, outputDirectory, lcGraphName)
     # -- Train and classify with SVM --
     #LogReg.getLearningCurve(allCombined)
+
+    #---- Testing Neural Network --------
+    alpha = 0.0001
+    layerDimensions =  (5, 2)
+    solver = 'lbfgs'
+    testValuePercent = 20
+    fixSeed = False
+    printOut = True
+    NN.classify(allCombined, alpha, layerDimensions, solver, testValuePercent, fixSeed, printOut)
