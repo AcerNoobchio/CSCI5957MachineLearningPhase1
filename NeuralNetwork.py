@@ -20,17 +20,17 @@ class NeuralNetwork(object):
     @staticmethod
     def classify(dataFrame, alphaToUse, hiddenLayerSize, solverToUse, testValuePercent, isFixed, printResults):
         
-        X_train, X_test, Y_train, Y_test = SVM.splitTestData(dataFrame, testValuePercent, isFixed)      #Split the data
+        X_train, X_test, Y_train, Y_test = NeuralNetwork.splitTestData(dataFrame, testValuePercent, isFixed)      #Split the data
 
         mlp = MLPClassifier(hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse) #Generate the Learning infrastructure
 
         mlp_model = mlp.fit(X_train, Y_train)                                                           #generate model from training data
         mlp_predictions = mlp_model.predict(X_test)                                                     #Make predictions
 
-        accuracy = mlp_predictions.score(X_test, Y_test)                                                #Model Accuracy
+        accuracy = mlp_model.score(X_test, Y_test)                                                #Model Accuracy
 
         if(printResults):
-            NeuralNetwork.printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, Y_test, mlp_predictions)
+            NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, testValuePercent, isFixed, accuracy, Y_test, mlp_predictions)
 
         return accuracy*100
 
@@ -46,10 +46,11 @@ class NeuralNetwork(object):
         return X_train, X_test, Y_train, Y_test
 
     @staticmethod
-    def printStats(CValue, kernelToUse, testValuePercent, isFixed, accuracy, Y_test, svm_predictions):
+    def printStats(Alpha, solverToUse, hiddenLayerSize, testValuePercent, isFixed, accuracy, Y_test, mlp_predictions):
         print("    The results for for SVM with settings: ")
-        print("\n    Kernel: "+kernelToUse)
-        print("\n    C - Value: "+str(CValue))
+        print("\n    Solver: "+solverToUse)
+        print("\n    Alpha: "+str(Alpha))
+        print("\n    Hidden Layer Dimensions: "+str(hiddenLayerSize))
         print("\n    Fixed seed: "+str(isFixed))
         print("\n    Test Set Percentage: "+str(testValuePercent))
         print("\n    are as follows: ")
@@ -57,13 +58,13 @@ class NeuralNetwork(object):
         #print("\n    Precision: ",metrics.precision_score(Y_test, svm_predictions, average='micro'))
         #print("\n    Recall: ",metrics.recall_score(Y_test, svm_predictions, average='micro'))
 
-        report_lr = metrics.precision_recall_fscore_support(Y_test, svm_predictions, average='micro')
+        report_lr = metrics.precision_recall_fscore_support(Y_test, mlp_predictions, average='micro')
         print ("\n     precision = %0.2f, recall = %0.2f, F1 = %0.2f, accuracy = %0.2f\n" % \
-           (report_lr[0], report_lr[1], report_lr[2], metrics.accuracy_score(Y_test, svm_predictions)))
+           (report_lr[0], report_lr[1], report_lr[2], metrics.accuracy_score(Y_test, mlp_predictions)))
 
-        print("\n    Accuracy: ",metrics.accuracy_score(Y_test, svm_predictions))
-        print("\n    Precision: ",metrics.precision_score(Y_test, svm_predictions, average='weighted'))
+        print("\n    Accuracy: ",metrics.accuracy_score(Y_test, mlp_predictions))
+        print("\n    Precision: ",metrics.precision_score(Y_test, mlp_predictions, average='weighted'))
 
-        print("\n    Recall:",metrics.recall_score(Y_test, svm_predictions, average='weighted'))
+        print("\n    Recall:",metrics.recall_score(Y_test, mlp_predictions, average='weighted'))
         print("\n\n  Confusion Matrix: ")
-        print(confusion_matrix(Y_test, svm_predictions))
+        print(confusion_matrix(Y_test, mlp_predictions))
