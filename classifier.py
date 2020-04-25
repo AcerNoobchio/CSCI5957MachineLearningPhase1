@@ -14,18 +14,18 @@ if __name__ == '__main__':
 
     # -- Set up enviornemnt constants and read in file paths --
     print("Setting up enviornment and collecting paths to raw data files\n")
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    #combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
     
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
-    combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
+    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
+    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    #combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
     
-    paths = classifierUtil.getRawDataFilePaths(directory)
-    grapher = Graph()
+    #paths = classifierUtil.getRawDataFilePaths(directory)
+    #grapher = Graph()
     # -- Graph all the raw data --
     #print("Graphing all the raw data\n")
     #classifierUtil.graphRawData(paths, 40, outputDirectory)
@@ -103,9 +103,10 @@ if __name__ == '__main__':
 
     #---- Testing Neural Network --------
     alpha = 0.0001
-    layerDimensions =  (5, 2)
+    layerDimensions =  (40,)
     solver = 'lbfgs'
     testValuePercent = 20
     fixSeed = False
     printOut = True
+    print("\nRunning Neural Network")
     NN.classify(allCombined, alpha, layerDimensions, solver, testValuePercent, fixSeed, printOut)

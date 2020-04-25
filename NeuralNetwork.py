@@ -22,7 +22,7 @@ class NeuralNetwork(object):
         
         X_train, X_test, Y_train, Y_test = NeuralNetwork.splitTestData(dataFrame, testValuePercent, isFixed)      #Split the data
 
-        mlp = MLPClassifier(hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse) #Generate the Learning infrastructure
+        mlp = MLPClassifier(activation='logistic', hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse) #Generate the Learning infrastructure
 
         mlp_model = mlp.fit(X_train, Y_train)                                                           #generate model from training data
         mlp_predictions = mlp_model.predict(X_test)                                                     #Make predictions
