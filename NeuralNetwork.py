@@ -5,6 +5,7 @@ from sklearn import datasets
 from sklearn import metrics
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 class NeuralNetwork(object):
@@ -21,6 +22,10 @@ class NeuralNetwork(object):
     def classify(dataFrame, alphaToUse, hiddenLayerSize, solverToUse, testValuePercent, isFixed, printResults):
         
         X_train, X_test, Y_train, Y_test = NeuralNetwork.splitTestData(dataFrame, testValuePercent, isFixed)      #Split the data
+        scaler=StandardScaler()
+        scaler.fit(X_train)
+        X_train=scaler.transform(X_train)
+        X_test=scaler.transform(X_test)
 
         mlp = MLPClassifier(activation='logistic', hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse) #Generate the Learning infrastructure
 

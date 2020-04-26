@@ -102,8 +102,8 @@ if __name__ == '__main__':
     #LogReg.getLearningCurve(allCombined)
 
     #---- Testing Neural Network --------
-    alpha = 0.0001
-    layerDimensions =  (40,)
+    alpha = 0.001
+    layerDimensions =  (60,)
     solver = 'lbfgs'
     testValuePercent = 20
     fixSeed = False
