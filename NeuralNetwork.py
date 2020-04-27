@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import sys
+from io import StringIO
 import statistics as stats
 from sklearn import datasets
 from sklearn import metrics
@@ -19,25 +21,24 @@ class NeuralNetwork(object):
     #isFixed:bool - whether or not to use a random value in the test
     #printResults:bool - whether or not to print statistics for each run
     @staticmethod
-    def classify(dataFrame, alphaToUse, hiddenLayerSize, solverToUse, testValuePercent, isFixed, printResults):
-        
+    def classify(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, isFixed, printResults):
+
         X_train, X_test, Y_train, Y_test = NeuralNetwork.splitTestData(dataFrame, testValuePercent, isFixed)      #Split the data
         scaler=StandardScaler()
         scaler.fit(X_train)
         X_train=scaler.transform(X_train)
         X_test=scaler.transform(X_test)
 
-        mlp = MLPClassifier(activation='logistic', hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse) #Generate the Learning infrastructure
+        mlp = MLPClassifier(activation=activationToUse, hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse, verbose=1, early_stopping=True) #Generate the Learning infrastructure
 
         mlp_model = mlp.fit(X_train, Y_train)                                                           #generate model from training data
         mlp_predictions = mlp_model.predict(X_test)                                                     #Make predictions
-
-        accuracy = mlp_model.score(X_test, Y_test)                                                #Model Accuracy
+        accuracy = mlp_model.score(X_test, Y_test)                                                      #Model Accuracy
 
         if(printResults):
-            NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, testValuePercent, isFixed, accuracy, Y_test, mlp_predictions)
+            NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, activationToUse, testValuePercent, isFixed, Y_test, mlp_predictions)
 
-        return accuracy*100
+        return accuracy*100, mlp.loss_curve_        #only works with sgd
 
     @staticmethod
     def splitTestData(dataFrame, testValuePercent, isFixed):
@@ -50,18 +51,17 @@ class NeuralNetwork(object):
 
         return X_train, X_test, Y_train, Y_test
 
+
     @staticmethod
-    def printStats(Alpha, solverToUse, hiddenLayerSize, testValuePercent, isFixed, accuracy, Y_test, mlp_predictions):
-        print("    The results for for SVM with settings: ")
-        print("\n    Solver: "+solverToUse)
-        print("\n    Alpha: "+str(Alpha))
-        print("\n    Hidden Layer Dimensions: "+str(hiddenLayerSize))
-        print("\n    Fixed seed: "+str(isFixed))
-        print("\n    Test Set Percentage: "+str(testValuePercent))
-        print("\n    are as follows: ")
-        print("\n    Accuracy: "+str(accuracy))
-        #print("\n    Precision: ",metrics.precision_score(Y_test, svm_predictions, average='micro'))
-        #print("\n    Recall: ",metrics.recall_score(Y_test, svm_predictions, average='micro'))
+    def printStats(Alpha, solverToUse, hiddenLayerSize, activation, testValuePercent, isFixed, Y_test, mlp_predictions):
+        print("\t The results for for SVM with settings: ")
+        print("\t Solver: "+solverToUse)
+        print("\t Activation: "+activation)
+        print("\t Alpha: "+str(Alpha))
+        print("\t Hidden Layer Dimensions: "+str(hiddenLayerSize))
+        print("\t Fixed seed: "+str(isFixed))
+        print("\t Test Set Percentage: "+str(testValuePercent))
+        print("\n\t are as follows: ")
 
         report_lr = metrics.precision_recall_fscore_support(Y_test, mlp_predictions, average='micro')
         print ("\n     precision = %0.2f, recall = %0.2f, F1 = %0.2f, accuracy = %0.2f\n" % \
@@ -69,7 +69,7 @@ class NeuralNetwork(object):
 
         print("\n    Accuracy: ",metrics.accuracy_score(Y_test, mlp_predictions))
         print("\n    Precision: ",metrics.precision_score(Y_test, mlp_predictions, average='weighted'))
-
         print("\n    Recall:",metrics.recall_score(Y_test, mlp_predictions, average='weighted'))
+
         print("\n\n  Confusion Matrix: ")
         print(confusion_matrix(Y_test, mlp_predictions))

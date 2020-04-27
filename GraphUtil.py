@@ -33,12 +33,12 @@ class GraphUtil:
         plt.savefig(outputDirectory+sub_dir+fileNameIn+fileAddendum)
 
     def plotArray(self, dataIn, maxY, minX, xLabel, yLabel, fileNameIn, fileAddendum, outputDirectory):
-        fig = plt.figure(figsize=(30, 6))
+        fig = plt.figure(figsize=(6, 6))
         
         plt.plot(dataIn, label='id %s' %fileNameIn, marker='o')
         plt.title(fileNameIn+fileAddendum)
-        plt.xlabel('Time')
-        plt.ylabel('Feature')
+        plt.xlabel(xLabel)
+        plt.ylabel(yLabel)
         plt.legend()
         plt.ylim(0, maxY)
         plt.xlim(minX, len(dataIn)-1)
