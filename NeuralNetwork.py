@@ -29,7 +29,7 @@ class NeuralNetwork(object):
         X_train=scaler.transform(X_train)
         X_test=scaler.transform(X_test)
 
-        mlp = MLPClassifier(activation=activationToUse, hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse, verbose=1, early_stopping=True) #Generate the Learning infrastructure
+        mlp = MLPClassifier(activation=activationToUse, hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse, early_stopping=True) #Generate the Learning infrastructure
 
         mlp_model = mlp.fit(X_train, Y_train)                                                           #generate model from training data
         mlp_predictions = mlp_model.predict(X_test)                                                     #Make predictions
@@ -38,7 +38,7 @@ class NeuralNetwork(object):
         if(printResults):
             NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, activationToUse, testValuePercent, isFixed, Y_test, mlp_predictions)
 
-        return accuracy*100, mlp.loss_curve_        #only works with sgd
+        return metrics.accuracy_score(Y_test, mlp_predictions)*100, mlp.loss_curve_        #only works with sgd
 
     @staticmethod
     def splitTestData(dataFrame, testValuePercent, isFixed):
@@ -51,7 +51,34 @@ class NeuralNetwork(object):
 
         return X_train, X_test, Y_train, Y_test
 
+    #Finds the accuracy values given a number of classification tests
+    @staticmethod
+    def testNIterations(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):
+        accuracyResults = []
+        for test in range(0, nIterations):
+            accuracy, curve = NeuralNetwork.classify(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, False, False)
+            accuracyResults.append(accuracy)
+            
+        return accuracyResults
 
+    #find the value 
+    def testAlpha(dataFrame, alphaToFind, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):
+        cAverages = []
+        alpha = 0.001
+        maxAlpha = int(alphaToFind*1000)
+        for sTest in range(0, maxAlpha):
+            
+            accuracyResults = NeuralNetwork.testNIterations(dataFrame, alpha, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations)
+            cAverages.append(NeuralNetwork.findAverage(accuracyResults))
+            alpha += 0.001
+        return cAverages
+
+
+        #Finds the average of a passed array
+    @staticmethod
+    def findAverage(resultArray):
+        numResults = len(resultArray)
+        return (float)(stats._sum(resultArray)[1]/numResults)
     @staticmethod
     def printStats(Alpha, solverToUse, hiddenLayerSize, activation, testValuePercent, isFixed, Y_test, mlp_predictions):
         print("\t The results for for SVM with settings: ")

@@ -109,9 +109,20 @@ if __name__ == '__main__':
     testValuePercent = 20
     fixSeed = False
     printOut = True
+
+
+    numTests = 50
+    alphaToFind = 0.5
     graphName = "Solver"+solver+"Activation"+activationToUse
     print("\nRunning Neural Network")
 
     #Run NN
-    accuracy, lossReport = NN.classify(allCombined, alpha, layerDimensions, activationToUse, solver, testValuePercent, fixSeed, printOut)
-    grapher.plotArray(lossReport, 2, 1, "Epoch", "Loss", graphName, "LOSS",outputDirectory)   #Plot the loss
+    #accuracy, lossReport = NN.classify(allCombined, alpha, layerDimensions, activationToUse, solver, testValuePercent, fixSeed, printOut)
+    alphaAverages = NN.testAlpha(allCombined, alphaToFind, layerDimensions, activationToUse, solver, testValuePercent, numTests)
+    bestAccuracy = max(alphaAverages[1:])
+    worstAccuracy = min(alphaAverages[1:])
+    print(alphaAverages)
+    print("Alpha Value with best Accuracy: ",alphaAverages.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
+    print("Alpha Value with worst Accuracy: ",alphaAverages.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
+    grapher.plotArray(alphaAverages, 100, 0, "Alpha", "Accuracy", graphName, "AlphaTrial",outputDirectory)   #Plot the loss
+    #grapher.plotArray(lossReport, 2, 1, "Epoch", "Loss", graphName, "LOSS",outputDirectory)   #Plot the loss
