@@ -32,14 +32,19 @@ class NeuralNetwork(object):
         mlp = MLPClassifier(activation=activationToUse, hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse, early_stopping=True) #Generate the Learning infrastructure
 
         mlp_model = mlp.fit(X_train, Y_train)                                                           #generate model from training data
+        lossCurve = mlp.loss_curve_
         mlp_predictions = mlp_model.predict(X_test)                                                     #Make predictions
         accuracy = mlp_model.score(X_test, Y_test)                                                      #Model Accuracy
+
+
+        #mlp_Valid = MLPClassifier(activation=activationToUse, hidden_layer_sizes = hiddenLayerSize, solver=solverToUse, alpha=alphaToUse, early_stopping=True)
+        #mlp_Valid = mlp.fit(X_test, Y_test)
 
         if(printResults):
             NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, activationToUse, testValuePercent, isFixed, Y_test, mlp_predictions)
 
-        return [metrics.accuracy_score(Y_test, mlp_predictions)*100,metrics.precision_score(Y_test, mlp_predictions, average='weighted')*100,metrics.recall_score(Y_test, mlp_predictions, average='weighted')*100], mlp.loss_curve_        #only works with sgd
-
+        return metrics.accuracy_score(Y_test, mlp_predictions)*100, metrics.precision_score(Y_test, mlp_predictions, average='weighted')*100, metrics.recall_score(Y_test, mlp_predictions, average='weighted')*100     #only works with sgd
+        #return metrics.accuracy_score(Y_test, mlp_predictions)*100, lossCurve, mlp_Valid.loss_curve_ 
     @staticmethod
     def splitTestData(dataFrame, testValuePercent, isFixed):
         X = dataFrame.iloc[:, 2:dataFrame.shape[1]]
@@ -55,14 +60,21 @@ class NeuralNetwork(object):
     @staticmethod
     def testNIterations(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):
         accuracyResults = []
-        layerSizes = [(60,), (100,), (120,),(60,60),(100,100),(120,120)]
+        precisionResults = []
+        recallResults = []
+
+        #layerSizes = [(60,), (100,), (120,),(60,60),(100,100),(120,120)]
         for test in range(0, nIterations):
-            accuracy, curve = NeuralNetwork.classify(dataFrame, alphaToUse, layerSizes[test], activationToUse, solverToUse, testValuePercent, False, True)
+            accuracy, precision, recall = NeuralNetwork.classify(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, False, False)
             accuracyResults.append(accuracy)
+            precisionResults.append(precision)
+            recallResults.append(recall)
             
         accuracyResults = pd.DataFrame(accuracyResults)
+        precisionResults = pd.DataFrame(precisionResults)
+        recallResults = pd.DataFrame(recallResults)
 
-        return accuracyResults.mean()
+        return accuracyResults.mean(), precisionResults.mean(), recallResults.mean()
 
     #find the value 
     def testAlpha(dataFrame, alphaToFind, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):

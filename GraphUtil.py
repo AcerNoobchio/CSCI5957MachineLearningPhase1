@@ -33,7 +33,7 @@ class GraphUtil:
         plt.savefig(outputDirectory+sub_dir+fileNameIn+fileAddendum)
 
     def plotArray(self, dataIn, maxY, minX, xLabel, yLabel, fileNameIn, fileAddendum, outputDirectory):
-        fig = plt.figure(figsize=(30, 6))
+        fig = plt.figure(figsize=(6, 6))
         
         plt.plot(dataIn, label='id %s' %fileNameIn, marker='o')
         plt.title(fileNameIn+fileAddendum)
