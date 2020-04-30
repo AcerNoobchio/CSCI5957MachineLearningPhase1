@@ -56,9 +56,10 @@ Broadly speaking, the workflow for preprocessing the data is something like this
   
 ### Classifying Data:
 
-Currently two machine learning algorithms have been implemented and are capable of providing predictions. These two models include:
+Currently three machine learning algorithms have been implemented and are capable of providing predictions. These three models include:
 - SVM
 - Logistic Regression
+- Multi Layer Perceptron (MLP)
 
 In order to use the models, create an instance of the class within classifier.py. A variety of options such as test_split ratio, regularization rate and more can be selected to customize performance. Class methods for each model implementation also include support for printing a variety of metrics and performance graphs.
 
@@ -70,6 +71,10 @@ Example usage of LogReg(params: dataFrame, testSizePercent, regularizationRate):
 
 **LogReg.classify(allCombined, .2, .01)**
 
+Example usage of Neural Network (params: dataFrame, alphaValue, layerDimensions, activationFunction, solver, testSizePercent, isFixed, printResults):
+
+**NeuralNetwork.classify(allCombined, 0.083, (100,100), 'logistic', 'adam', 20, false, true)**
+
 ### Overview of the Python Files:
 
 - Classifier: The Driver class that contains main and some static methods for building the organizational data structure that will allow one to iterate over all of the data files in the project
@@ -79,6 +84,7 @@ Example usage of LogReg(params: dataFrame, testSizePercent, regularizationRate):
 - FileReaderUtil: A static class that contains methods to read in the filepaths of a given directory and read in an individual file
 - GraphUtil: An instance class that contains the methods used to create different graphs of the read-in data
 - LogisiticRegression: A static class that contains methods for testing and creating a logistic regression model
+- NeuralNetwork: A class that contains methods for testing and creating a neural network model using a multi-layer perceptron
 - StringUtil: A static class that contains some additional string methods 
 - SupportVector: A static class that conatins methods for creating and testing a Support Vector Machine classification model
 - SynchronizationUtil: A static class that contains the methods for breaking the data into chunks and synchronizing the data according to the first column (Time).
