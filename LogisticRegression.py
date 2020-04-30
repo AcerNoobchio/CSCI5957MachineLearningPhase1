@@ -149,8 +149,8 @@ class LogReg(object):
         print ("\nprecision = %0.2f, recall = %0.2f, F1 = %0.2f, accuracy = %0.2f\n" % \
            (report_lr[0], report_lr[1], report_lr[2], metrics.accuracy_score(y_test, y_pred)))
 
-        print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-        print("Precision:",metrics.precision_score(y_test, y_pred, average='weighted'))
-        print("Recall:",metrics.recall_score(y_test, y_pred, average='weighted'))
+        print("\n\tAccuracy:",metrics.accuracy_score(y_test, y_pred))
+        print("\n\tPrecision:",metrics.precision_score(y_test, y_pred, average='weighted'))
+        print("\n\tRecall:",metrics.recall_score(y_test, y_pred, average='weighted'))
 
 

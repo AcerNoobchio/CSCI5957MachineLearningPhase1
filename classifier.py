@@ -14,15 +14,15 @@ if __name__ == '__main__':
 
     # -- Set up enviornemnt constants and read in file paths --
     print("Setting up enviornment and collecting paths to raw data files\n")
-    #directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
-    #outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
-    #featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
-    #combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
+    directory = 'C:\\Users\\Stephanos\\Documents\\Dev\\ML\\CSCI5957MachineLearningPhase1\\rawData\\'
+    outputDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\test\\'
+    featureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\featureData\\'
+    combinedFeatureDirectory = 'C:\\Users\\Stephanos\\Documents\\Dev\ML\\CSCI5957MachineLearningPhase1\\combinedFeatureData\\'
     
-    directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
-    outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
-    featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
-    combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
+    #directory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\rawDataOriginal\\'
+    #outputDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\test\\'
+    #featureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\featureData\\'
+    #combinedFeatureDirectory = 'C:\\Users\\jacob\\source\\repos\\MachineLearningPhase1\\MachineLearningPhase1\\combinedFeatureData\\'
     
     #paths = classifierUtil.getRawDataFilePaths(directory)
     grapher = Graph()
@@ -69,16 +69,17 @@ if __name__ == '__main__':
     # -- Train and classify with SVM --
     #numCs = 50
     #numSs = 50
-    #kernelToUse = 'rbf' #gaussian
-    #testValuePercent = 20
+    kernelToUse = 'rbf' #gaussian
+    testValuePercent = 20
     #iterationsPerTest = 20
-    #chosenC = 9
-    #chosenS = 1
+    chosenC = 9
+    chosenS = 1
     #graphName = "C"+str(numCs)+"Kernel"+kernelToUse+"TestPct"+str(testValuePercent)+"Itrs"+str(iterationsPerTest)
     #lcGraphName = "LearningCurveKernel"+kernelToUse+"C"+str(chosenC)+"TestPct"+str(testValuePercent)
 
     #---- Testing C-Value ------
-    #SVM.classify(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, True, True)
+    SVM.classify(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, True, True)
+    LogReg.classify(allCombined)
     #average = SVM.testNIterations(allCombined, chosenC, chosenS, kernelToUse, testValuePercent, 5)
     #print("Average: ", SVM.findAverage(average))
     #cRanks = SVM.findCsUpToN(allCombined, numCs, chosenS,kernelToUse, testValuePercent, iterationsPerTest)
@@ -103,10 +104,10 @@ if __name__ == '__main__':
 
     #---- Testing Neural Network --------
     alpha = 0.001
-    layerDimensions =  (60,)
+    layerDimensions =  (100,100)
     solver = 'adam'                #Either lbfgs, sgd, adam 
     activationToUse = 'logistic'
-    testValuePercent = 20
+    testValuePercent = 30
     fixSeed = False
     printOut = True
 
@@ -117,12 +118,13 @@ if __name__ == '__main__':
     print("\nRunning Neural Network")
 
     #Run NN
-    #accuracy, lossReport = NN.classify(allCombined, alpha, layerDimensions, activationToUse, solver, testValuePercent, fixSeed, printOut)
-    alphaAverages = NN.testAlpha(allCombined, alphaToFind, layerDimensions, activationToUse, solver, testValuePercent, numTests)
-    bestAccuracy = max(alphaAverages[1:])
-    worstAccuracy = min(alphaAverages[1:])
-    print(alphaAverages)
-    print("Alpha Value with best Accuracy: ",alphaAverages.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
-    print("Alpha Value with worst Accuracy: ",alphaAverages.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
-    grapher.plotArray(alphaAverages, 100, 0, "Alpha", "Accuracy", graphName, "AlphaTrial",outputDirectory)   #Plot the loss
+    NN.classify(allCombined, alpha, layerDimensions, activationToUse, solver, testValuePercent, False, True)
+    #accuracy = NN.testNIterations(allCombined, alpha, layerDimensions, activationToUse, solver, testValuePercent, 6)
+    #alphaAverages = NN.testAlpha(allCombined, alphaToFind, layerDimensions, activationToUse, solver, testValuePercent, numTests)
+    #bestAccuracy = max(alphaAverages[1:])
+    #worstAccuracy = min(alphaAverages[1:])
+    #print(alphaAverages)
+    #print("Alpha Value with best Accuracy: ",alphaAverages.index(bestAccuracy), " Accuracy: " + str(bestAccuracy))
+    #print("Alpha Value with worst Accuracy: ",alphaAverages.index(worstAccuracy), " Accuracy: " + str(worstAccuracy))
+    #grapher.plotArray(alphaAverages, 100, 0, "Alpha", "Accuracy", graphName, "AlphaTrial",outputDirectory)   #Plot the loss
     #grapher.plotArray(lossReport, 2, 1, "Epoch", "Loss", graphName, "LOSS",outputDirectory)   #Plot the loss

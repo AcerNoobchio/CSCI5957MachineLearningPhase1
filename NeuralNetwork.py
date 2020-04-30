@@ -38,7 +38,7 @@ class NeuralNetwork(object):
         if(printResults):
             NeuralNetwork.printStats(alphaToUse, solverToUse, hiddenLayerSize, activationToUse, testValuePercent, isFixed, Y_test, mlp_predictions)
 
-        return metrics.accuracy_score(Y_test, mlp_predictions)*100, mlp.loss_curve_        #only works with sgd
+        return [metrics.accuracy_score(Y_test, mlp_predictions)*100,metrics.precision_score(Y_test, mlp_predictions, average='weighted')*100,metrics.recall_score(Y_test, mlp_predictions, average='weighted')*100], mlp.loss_curve_        #only works with sgd
 
     @staticmethod
     def splitTestData(dataFrame, testValuePercent, isFixed):
@@ -55,11 +55,14 @@ class NeuralNetwork(object):
     @staticmethod
     def testNIterations(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):
         accuracyResults = []
+        layerSizes = [(60,), (100,), (120,),(60,60),(100,100),(120,120)]
         for test in range(0, nIterations):
-            accuracy, curve = NeuralNetwork.classify(dataFrame, alphaToUse, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, False, False)
+            accuracy, curve = NeuralNetwork.classify(dataFrame, alphaToUse, layerSizes[test], activationToUse, solverToUse, testValuePercent, False, True)
             accuracyResults.append(accuracy)
             
-        return accuracyResults
+        accuracyResults = pd.DataFrame(accuracyResults)
+
+        return accuracyResults.mean()
 
     #find the value 
     def testAlpha(dataFrame, alphaToFind, hiddenLayerSize, activationToUse, solverToUse, testValuePercent, nIterations):
@@ -74,11 +77,12 @@ class NeuralNetwork(object):
         return cAverages
 
 
-        #Finds the average of a passed array
+    #Finds the average of a passed array
     @staticmethod
     def findAverage(resultArray):
         numResults = len(resultArray)
         return (float)(stats._sum(resultArray)[1]/numResults)
+
     @staticmethod
     def printStats(Alpha, solverToUse, hiddenLayerSize, activation, testValuePercent, isFixed, Y_test, mlp_predictions):
         print("\t The results for for SVM with settings: ")
